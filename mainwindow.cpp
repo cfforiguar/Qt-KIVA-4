@@ -59,7 +59,7 @@ MainWindow::MainWindow(QWidget *parent)
     setupUi(this);
 
     QStringList headers;
-    headers << tr("Title") << tr("Description");
+    headers << tr("C1") << tr("C2") << tr("C3") << tr("C4");
 
     QFile file(":/default.txt");
     file.open(QIODevice::ReadOnly);

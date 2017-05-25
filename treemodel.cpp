@@ -62,6 +62,47 @@ TreeModel::TreeModel(const QStringList &headers, const QString &data, QObject *p
         rootData << header;
 
     rootItem = new TreeItem(rootData);
+
+
+
+
+    //<MOD>
+    TreeItem *parent2;
+
+    rootData.clear();
+    rootData << tr("Output") << tr("") << tr("") << tr("");
+    //Hijo de rootItem
+    parent2 =rootItem;
+    parent2->insertChildren(parent2->childCount(), 1, parent2->columnCount());
+    for (int column = 0; column < rootData.size(); ++column)
+        parent2->child(parent2->childCount() - 1)->setData(column, rootData[column]);
+
+    rootData.clear();
+    rootData << tr("gmv") << tr("1") << tr("") << tr("");
+    //Hijo del hijo de rootItem
+    parent2 =rootItem->child(rootItem->childCount() - 1);
+    parent2->insertChildren(parent2->childCount(), 1, parent2->columnCount());
+    for (int column = 0; column < rootData.size(); ++column)
+        parent2->child(parent2->childCount() - 1)->setData(column, rootData[column]);
+
+    rootData.clear();
+    rootData << tr("Química") << tr("") << tr("") << tr("");
+    //Hijo de rootItem
+    parent2 =rootItem;
+    parent2->insertChildren(parent2->childCount(), 1, parent2->columnCount());
+    for (int column = 0; column < rootData.size(); ++column)
+        parent2->child(parent2->childCount() - 1)->setData(column, rootData[column]);
+
+    rootData.clear();
+    rootData << tr("nrk") << tr("3") << tr("") << tr("");
+    //Hijo del hijo de rootItem
+    parent2 =rootItem->child(rootItem->childCount() - 1);
+    parent2->insertChildren(parent2->childCount(), 1, parent2->columnCount());
+    for (int column = 0; column < rootData.size(); ++column)
+        parent2->child(parent2->childCount() - 1)->setData(column, rootData[column]);
+    //</MOD>
+/*
+*/
     setupModelData(data.split(QString("\n")), rootItem);
 }
 //! [0]
@@ -98,8 +139,11 @@ Qt::ItemFlags TreeModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
         return 0;
-
-    return Qt::ItemIsEditable | QAbstractItemModel::flags(index);
+    if (index.column()==0){
+        return  QAbstractItemModel::flags(index);
+    } else {
+        return Qt::ItemIsEditable | QAbstractItemModel::flags(index);
+    }
 }
 //! [3]
 
@@ -255,17 +299,17 @@ void TreeModel::setupModelData(const QStringList &lines, TreeItem *parent)
 
     while (number < lines.count()) {
         int position = 0;
-        while (position < lines[number].length()) {
+/*        while (position < lines[number].length()) {
             if (lines[number].at(position) != ' ')
                 break;
             ++position;
-        }
+        }*/
 
         QString lineData = lines[number].mid(position).trimmed();
 
         if (!lineData.isEmpty()) {
             // Read the column data from the rest of the line.
-            QStringList columnStrings = lineData.split("\t", QString::SkipEmptyParts);
+            QStringList columnStrings = lineData.split(" ", QString::SkipEmptyParts);
             QVector<QVariant> columnData;
             for (int column = 0; column < columnStrings.count(); ++column)
                 columnData << columnStrings[column];

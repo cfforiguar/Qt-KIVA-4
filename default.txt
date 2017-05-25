@@ -1,40 +1,231 @@
-Getting Started				How to familiarize yourself with Qt Designer
-    Launching Designer			Running the Qt Designer application
-    The User Interface			How to interact with Qt Designer
-
-Designing a Component			Creating a GUI for your application
-    Creating a Dialog			How to create a dialog
-    Composing the Dialog		Putting widgets into the dialog example
-    Creating a Layout			Arranging widgets on a form
-    Signal and Slot Connections		Making widget communicate with each other
-
-Using a Component in Your Application	Generating code from forms
-    The Direct Approach			Using a form without any adjustments
-    The Single Inheritance Approach	Subclassing a form's base class
-    The Multiple Inheritance Approach	Subclassing the form itself
-    Automatic Connections		Connecting widgets using a naming scheme
-        A Dialog Without Auto-Connect	How to connect widgets without a naming scheme
-        A Dialog With Auto-Connect	Using automatic connections
-
-Form Editing Mode			How to edit a form in Qt Designer
-    Managing Forms			Loading and saving forms
-    Editing a Form			Basic editing techniques
-    The Property Editor			Changing widget properties
-    The Object Inspector		Examining the hierarchy of objects on a form
-    Layouts				Objects that arrange widgets on a form
-        Applying and Breaking Layouts	Managing widgets in layouts 
-        Horizontal and Vertical Layouts	Standard row and column layouts
-        The Grid Layout			Arranging widgets in a matrix
-    Previewing Forms			Checking that the design works
-
-Using Containers			How to group widgets together
-    General Features			Common container features
-    Frames				QFrame
-    Group Boxes				QGroupBox
-    Stacked Widgets			QStackedWidget
-    Tab Widgets				QTabWidget
-    Toolbox Widgets			QToolBox
-
-Connection Editing Mode			Connecting widgets together with signals and slots
-    Connecting Objects			Making connections in Qt Designer
-    Editing Connections			Changing existing connections
+Modeling class example,  45 degree, gasoline,
+  irest    0
+ nohydro   0
+  itype    1
+  lwall    1
+  lpr        0
+  irez     2
+  ncfilm 99999
+  nctap8 1000
+  nclast 99999
+  ncmon  10
+ ncaspec     0
+  gmv        0.0
+  cafilm     10.0
+  cafin      140.0
+  angmom     1.0
+  pgssw      0
+  dti        1.0e-4
+  dtmxca     1.0
+  dtmax      1.0e-4
+  tlimd      0.0
+  twfilm     9.99e+9
+  twfin      9.99e+9
+  fchsp      0.25
+  bore 8.8900
+  stroke 11.43
+  squish 1.9050
+  rpm      900.0
+  atdc       -150.0
+  datdct     0.0
+  revrep     2.0
+conrod      20.0
+  swirl      8.0
+  swipro     3.11
+  thsect     360.0
+  sector     0.0
+  deact      0.0
+  epsy       1.0e-3
+  epsv       1.0e-3
+  epsp       1.0e-4
+  epst       1.0e-3
+  epsk       1.0e-3
+  epse       1.0e-3
+  gx         0.0
+  gy         0.0
+  gz         0.0
+  tcylwl   350.0
+  thead    373.0
+  tpistn   373.0
+  pardon     0.0
+  a0         0.0
+  b0         1.0
+  artvis     0.0
+  ecnsrv     0.0
+  adia       0.0
+  anu0       0.0
+  visrat    -0.66666667
+  tcut     300.0
+  tcute   2000.0
+  epschm     0.02
+  omgchm     1.0
+  turbsw     1.0
+  sgsl       0.0
+ trbchem     2.0
+  capa      18.0
+ pmplict     2.0
+ lospeed     0
+  airmu1     1.457e-5
+  airmu2   110.0
+  airla1   252.0
+  airla2   200.0
+  prl        0.74
+  rpr        1.11
+  rsc        1.11
+  xignit     2.812e+3
+  t1ign     -1.0
+  tdign     -1.0
+  ca1ign   -15.0
+  cadign    -7.0
+  xignl1     4.1953125
+  xignr1     4.2046875
+  yignf1    -0.00371875
+  yignd1     0.00371875
+  zignb1    12.39828125
+  zignt1    12.42171875
+  xignl2     0.0
+  xignr2     0.0
+  yignf2     0.0
+  yignd2     0.0
+  zignb2     0.0
+  zignt2     0.0
+  kwikeq     0
+  numnoz     1
+  numinj     1
+  numvel     1
+  t1inj     -1.0
+  tdinj     -1.0
+  ca1inj   9999.9
+  cadinj    12.672
+  tspmas     0.0116
+  tnparc   400.0
+  pulse      1.0
+ injdist     1
+  kolide     1
+  tpi      350.0
+  turb       1.0
+ breakup     1.0
+  evapp      1.0
+  numdiv    18
+  scf      100.0
+  drnoz      0.0
+  dznoz     10.021934
+  dthnoz     0.0
+  tiltxy     0.0
+  tiltxz     0.0
+  cone      62.5
+  dcone     12.5
+  anoz       1.0
+  smr        5.00e-4
+  amp0       0.0
+  diameterinjector 0.01
+      4000.0
+  nsp     48  1
+  ic8h18   1.0     0.00001
+      o2   mw2     32.000  htf2     0.0
+      n2   mw3     28.016  htf3     0.0
+     co2   mw4     44.011  htf4   -93.965
+     h2o   mw5     18.016  htf5   -57.103
+       h   mw6      1.008  htf6    51.631
+      h2   mw7      2.016  htf7     0.0
+       o   mw8     16.000  htf8    58.989
+       n   mw9     14.008  htf9   112.520
+      oh   mw10    17.008  htf10    9.289
+      co   mw11    28.011  htf11  -27.200
+      no   mw12    30.008  htf12   21.456
+     ch4   mw13    16.04276htf13  -17.90011
+    ch3o   mw14    31.03422htf14    3.89668
+    ch2o   mw15    30.02628htf15  -27.70458
+     hco   mw16    29.01834htf16   10.40093
+     ch3   mw17    15.03482htf17   34.82314
+    c2h3   mw18    27.04582htf18   68.41664
+    c2h4   mw19    28.05376htf19   12.53937
+    c2h5   mw20    29.06170htf20   28.01801
+    c3h4   mw21    40.06476htf21   45.63071
+    c3h5   mw22    41.07270htf22   40.39174
+    c3h6   mw23    42.08064htf23    4.65048
+    c3h7   mw24    43.08858htf24   18.20057
+   c7h16   mw25   100.20404htf25  -45.05463
+   c7h15   mw26    99.19610htf26    3.95041
+ c7h15o2   mw27   131.19490htf27  -31.64030
+c7h14ooh   mw28   131.19490htf28  -19.09044
+o2c7h14ooh mw29   163.19370htf29  -56.31224
+   c7ket   mw30   146.18636htf30  -90.42929
+ c5h11co   mw31    99.15274htf31  -22.38292
+   c7h14   mw32    98.18816htf32  -20.66212
+   c8h17   mw33   113.22298htf33   -6.58887
+ c8h17o2   mw34   145.22178htf34  -38.69179
+c8h16ooh   mw35   145.22178htf35  -34.42191
+o2c8h16ooh mw36   177.22058htf36  -58.29470
+   c8ket   mw37   160.21324htf37  -94.51258
+ c6h13co   mw38   113.17962htf38  -22.38292
+   c8h16   mw39   112.21504htf39  -26.49272
+    h2o2   mw40    34.01468htf40  -32.53073
+     n2o   mw41    44.01288htf41   19.61405
+     ho2   mw42    33.00674htf42    3.80039
+     no2   mw43    46.00554htf43    7.91059
+   ch2oh   mw44    31.03422htf44   -4.10318
+   ch3oh   mw45    32.04216htf45  -48.06443
+    c2h2   mw46    26.03788htf46   54.19938
+   ch2co   mw47    42.03728htf47  -12.39750
+    hcco   mw48    41.02934htf48   42.44886
+stoifuel     4.0
+  stoio2    49.0
+nregions     1
+ presi,      1.062e+6
+ tempi,    355.0
+ tkei,       0.02
+ scli,       3.11
+  er,        0.0
+ mfracfu,    0.054137
+ mfraco2,    0.18958
+ mfracn2,    0.7198
+ mfracco2,   0.024989
+ mfrach2o,   0.011499
+ mfrach,     0.0
+ mfrach2,    0.0
+ mfraco,     0.0
+ mfracn,     0.0
+ mfracoh,    0.0
+ mfracco,    0.0
+ mfracno,    0.0
+mfracch4,         0.000000E+00
+mfracch3o,        0.000000E+00
+mfracch2o,        0.000000E+00
+mfrachco,         0.000000E+00
+mfracch3,         0.000000E+00
+mfracc2h3,        0.000000E+00
+mfracc2h4,        0.000000E+00
+mfracc2h5,        0.000000E+00
+mfracc3h4,        0.000000E+00
+mfracc3h5,        0.000000E+00
+mfracc3h6,        0.000000E+00
+mfracc3h7,        0.000000E+00
+mfracc7h16,       0.000000E+00
+mfracc7h15,       0.000000E+00
+mfracc7h15o2,     0.000000E+00
+mfracc7h14ooh,    0.000000E+00
+mfraco2c7h14ooh,  0.000000E+00
+mfracc7ket,       0.000000E+00
+mfracc5h11co,     0.000000E+00
+mfracc7h14,       0.000000E+00
+mfracc8h17,       0.000000E+00
+mfracc8h17o2,     0.000000E+00
+mfracc8h16ooh,    0.000000E+00
+mfraco2c8h16ooh,  0.000000E+00
+mfracc8ket,       0.000000E+00
+mfracc6h13co,     0.000000E+00
+mfracc8h16,       0.000000E+00
+mfrach2o2,        0.000000E+00
+mfracn2o,         0.000000E+00
+mfracho2,         0.000000E+00
+mfracno2,         0.000000E+00
+mfracch2oh,       0.000000E+00
+mfracch3oh,       0.000000E+00
+mfracc2h2,        0.000000E+00
+mfracch2co,       0.000000E+00
+mfrachcco,        0.000000E+00
+  nrk     175  20.428   0.0
+  nre       0
+ nvalves  0
+  isoot     0
