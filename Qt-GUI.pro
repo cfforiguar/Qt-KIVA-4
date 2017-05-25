@@ -4,7 +4,7 @@ FORMS       = mainwindow.ui
 HEADERS     = mainwindow.h \
               treeitem.h \
               treemodel.h
-RESOURCES   = editabletreemodel.qrc
+RESOURCES   = QtGUI.qrc
 SOURCES     = mainwindow.cpp \
               treeitem.cpp \
               treemodel.cpp \

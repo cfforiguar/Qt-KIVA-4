@@ -54,7 +54,7 @@
 
 int main(int argc, char *argv[])
 {
-    Q_INIT_RESOURCE(editabletreemodel);
+    Q_INIT_RESOURCE(QtGUI);
 
     QApplication app(argc, argv);
     MainWindow window;

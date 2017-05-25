@@ -303,7 +303,8 @@ void TreeModel::setupModelData(const QStringList &lines, TreeItem *parent)
             if (lines[number].at(position) != ' ')
                 break;
             ++position;
-        }*/
+        }
+*/
 
         QString lineData = lines[number].mid(position).trimmed();
 
