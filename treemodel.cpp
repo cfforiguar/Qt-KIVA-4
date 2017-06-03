@@ -293,8 +293,11 @@ void TreeModel::setupModelData(const QStringList &lines, TreeItem *parent)
     parents << parent;
 
     int number = 0;
-    int position = 0;
-
+    int PlaceWord = 0;
+    QStringList ParentWords;
+    ParentWords << "ncaspec" << "numinj" << "scf" << "nsp" << "er," << "nrk" << "nre" << "isoot";
+    QStringList EndWords;
+    EndWords << "gmv" << "injdist" << "nsp" << "stoifuel" << "nrk" << "nre" << "nvalves" << "_";
     while (number < lines.count()) {
 
         QString lineData = lines[number];
@@ -307,8 +310,9 @@ void TreeModel::setupModelData(const QStringList &lines, TreeItem *parent)
             for (int column = 0; column < columnStrings.count(); ++column)
                 columnData << columnStrings[column];
 
-            if (!columnStrings[0].compare("stoifuel",Qt::CaseSensitive) && parents.count() > 1) {
+            if (!columnStrings[0].compare(EndWords[PlaceWord],Qt::CaseSensitive) && parents.count() > 1) {
                 parents.pop_back();
+                PlaceWord=PlaceWord+1;
             }
             // Append a new item to the current parent's list of children.
             TreeItem *parent = parents.last();
@@ -316,7 +320,7 @@ void TreeModel::setupModelData(const QStringList &lines, TreeItem *parent)
             for (int column = 0; column < columnData.size(); ++column)
                 parent->child(parent->childCount() - 1)->setData(column, columnData[column]);
 
-            if (!columnStrings[0].compare("nsp",Qt::CaseSensitive)) {
+            if (!columnStrings[0].compare(ParentWords[PlaceWord],Qt::CaseSensitive)) {
                 parents << parents.last()->child(parents.last()->childCount()-1);
             }
 
