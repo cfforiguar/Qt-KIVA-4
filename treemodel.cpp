@@ -101,8 +101,7 @@ TreeModel::TreeModel(const QStringList &headers, const QString &data, QObject *p
     for (int column = 0; column < rootData.size(); ++column)
         parent2->child(parent2->childCount() - 1)->setData(column, rootData[column]);
     //</MOD>
-/*
-*/
+
     setupModelData(data.split(QString("\n")), rootItem);
 }
 //! [0]
@@ -139,7 +138,7 @@ Qt::ItemFlags TreeModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
         return 0;
-    if (index.column()==0){
+    if (index.column()% 2==0){
         return  QAbstractItemModel::flags(index);
     } else {
         return Qt::ItemIsEditable | QAbstractItemModel::flags(index);
@@ -291,14 +290,13 @@ bool TreeModel::setHeaderData(int section, Qt::Orientation orientation,
 void TreeModel::setupModelData(const QStringList &lines, TreeItem *parent)
 {
     QList<TreeItem*> parents;
-    QList<int> indentations;
     parents << parent;
-    indentations << 0;
 
     int number = 0;
+    int position = 0;
 
     while (number < lines.count()) {
-        int position = 0;
+
 /*        while (position < lines[number].length()) {
             if (lines[number].at(position) != ' ')
                 break;
@@ -306,35 +304,29 @@ void TreeModel::setupModelData(const QStringList &lines, TreeItem *parent)
         }
 */
 
-        QString lineData = lines[number].mid(position).trimmed();
+        QString lineData = lines[number];
 
         if (!lineData.isEmpty()) {
             // Read the column data from the rest of the line.
             QStringList columnStrings = lineData.split(" ", QString::SkipEmptyParts);
             QVector<QVariant> columnData;
+
             for (int column = 0; column < columnStrings.count(); ++column)
                 columnData << columnStrings[column];
 
-            if (position > indentations.last()) {
-                // The last child of the current parent is now the new parent
-                // unless the current parent has no children.
-
-                if (parents.last()->childCount() > 0) {
-                    parents << parents.last()->child(parents.last()->childCount()-1);
-                    indentations << position;
-                }
-            } else {
-                while (position < indentations.last() && parents.count() > 0) {
-                    parents.pop_back();
-                    indentations.pop_back();
-                }
+            if (!columnStrings[0].compare("stoifuel",Qt::CaseSensitive) && parents.count() > 1) {
+                parents.pop_back();
             }
-
             // Append a new item to the current parent's list of children.
             TreeItem *parent = parents.last();
             parent->insertChildren(parent->childCount(), 1, rootItem->columnCount());
             for (int column = 0; column < columnData.size(); ++column)
                 parent->child(parent->childCount() - 1)->setData(column, columnData[column]);
+
+            if (!columnStrings[0].compare("nsp",Qt::CaseSensitive)) {
+                parents << parents.last()->child(parents.last()->childCount()-1);
+            }
+
         }
 
         ++number;

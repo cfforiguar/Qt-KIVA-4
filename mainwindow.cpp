@@ -51,6 +51,9 @@
 #include "mainwindow.h"
 #include "treemodel.h"
 
+#include <QtWidgets>//test
+
+
 #include <QFile>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -59,7 +62,7 @@ MainWindow::MainWindow(QWidget *parent)
     setupUi(this);
 
     QStringList headers;
-    headers << tr("C1") << tr("C2") << tr("C3") << tr("C4");
+    headers << tr("C1") << tr("C2") << tr("C3") << tr("C4")<< tr("C4")<< tr("C4")<< tr("C4");
 
     QFile file(":/default.txt");
     file.open(QIODevice::ReadOnly);
@@ -69,6 +72,16 @@ MainWindow::MainWindow(QWidget *parent)
     view->setModel(model);
     for (int column = 0; column < model->columnCount(); ++column)
         view->resizeColumnToContents(column);
+
+    //QSortFilterProxyModel testbed --> //test
+    proxyModel = new QSortFilterProxyModel;//test
+    proxyModel->setSourceModel(model);//test
+
+    QRegExp regExp("4000.0|nrk|Output|nsp", Qt::CaseSensitive, QRegExp::RegExp);//test
+    proxyModel->setFilterRegExp(regExp);//test
+
+    treeView->setModel(proxyModel);//test
+
 
     connect(exitAction, &QAction::triggered, qApp, &QCoreApplication::quit);
 

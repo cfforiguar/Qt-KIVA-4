@@ -56,6 +56,11 @@
 #include <QMainWindow>
 #include <QModelIndex>
 
+
+QT_BEGIN_NAMESPACE
+class QSortFilterProxyModel;
+QT_END_NAMESPACE
+
 class MainWindow : public QMainWindow, private Ui::MainWindow
 {
     Q_OBJECT
@@ -72,6 +77,9 @@ private slots:
     void insertRow();
     bool removeColumn();
     void removeRow();
+private://test
+    QSortFilterProxyModel *proxyModel;//test
+
 };
 
 #endif // MAINWINDOW_H
