@@ -77,7 +77,7 @@ MainWindow::MainWindow(QWidget *parent)
     proxyModel = new QSortFilterProxyModel;//test
     proxyModel->setSourceModel(model);//test
 
-    QRegExp regExp("4000.0|nrk|Output|nsp", Qt::CaseSensitive, QRegExp::RegExp);//test
+    QRegExp regExp("Output|nsp|hcco", Qt::CaseSensitive, QRegExp::RegExp);//test
     proxyModel->setFilterRegExp(regExp);//test
 
     treeView->setModel(proxyModel);//test

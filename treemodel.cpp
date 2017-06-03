@@ -297,13 +297,6 @@ void TreeModel::setupModelData(const QStringList &lines, TreeItem *parent)
 
     while (number < lines.count()) {
 
-/*        while (position < lines[number].length()) {
-            if (lines[number].at(position) != ' ')
-                break;
-            ++position;
-        }
-*/
-
         QString lineData = lines[number];
 
         if (!lineData.isEmpty()) {
