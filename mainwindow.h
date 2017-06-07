@@ -53,6 +53,8 @@
 
 #include "ui_mainwindow.h"
 
+#include "datawidget.h"
+
 #include <QMainWindow>
 #include <QModelIndex>
 
@@ -79,6 +81,7 @@ private slots:
     void removeRow();
 private://test
     QSortFilterProxyModel *proxyModel;//test
+    DataWidget *tabDWidget;
 
 };
 

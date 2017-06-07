@@ -106,6 +106,10 @@ TreeModel::TreeModel(const QStringList &headers, const QString &data, QObject *p
 }
 //! [0]
 
+TreeModel::TreeModel(QObject *parent)
+    : QAbstractItemModel(parent)
+{
+}
 //! [1]
 TreeModel::~TreeModel()
 {

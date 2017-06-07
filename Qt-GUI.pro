@@ -1,13 +1,15 @@
 QT += widgets
 
 FORMS       = mainwindow.ui
-HEADERS     = mainwindow.h \
-              treeitem.h \
-              treemodel.h
+HEADERS     = treeitem.h \
+              treemodel.h \
+              datawidget.h \
+              mainwindow.h
 RESOURCES   = QtGUI.qrc
 SOURCES     = mainwindow.cpp \
               treeitem.cpp \
               treemodel.cpp \
+              datawidget.cpp\
               main.cpp
 
 # install

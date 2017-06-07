@@ -82,11 +82,13 @@ MainWindow::MainWindow(QWidget *parent)
 
     treeView->setModel(proxyModel);//test
 
-
     connect(exitAction, &QAction::triggered, qApp, &QCoreApplication::quit);
 
     connect(view->selectionModel(), &QItemSelectionModel::selectionChanged,
             this, &MainWindow::updateActions);
+
+    tabDWidget = new DataWidget;
+    horizontalLayout_2->addWidget(tabDWidget);
 
     connect(actionsMenu, &QMenu::aboutToShow, this, &MainWindow::updateActions);
     connect(insertRowAction, &QAction::triggered, this, &MainWindow::insertRow);
