@@ -54,6 +54,7 @@
 #include "ui_mainwindow.h"
 
 #include "datawidget.h"
+#include "treeproxymodel.h"
 
 #include <QMainWindow>
 #include <QModelIndex>
@@ -80,7 +81,7 @@ private slots:
     bool removeColumn();
     void removeRow();
 private://test
-    QSortFilterProxyModel *proxyModel;//test
+    TreeProxyModel *proxyModel;//test
     DataWidget *tabDWidget;
 
 };

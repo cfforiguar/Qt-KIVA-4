@@ -74,10 +74,10 @@ MainWindow::MainWindow(QWidget *parent)
         view->resizeColumnToContents(column);
 
     //QSortFilterProxyModel testbed --> //test
-    proxyModel = new QSortFilterProxyModel;//test
+    proxyModel = new TreeProxyModel;//test
     proxyModel->setSourceModel(model);//test
 
-    QRegExp regExp("Output|nsp|hcco", Qt::CaseSensitive, QRegExp::RegExp);//test
+    QRegExp regExp("Output|nsp|mw", Qt::CaseSensitive, QRegExp::RegExp);//test
     proxyModel->setFilterRegExp(regExp);//test
 
     treeView->setModel(proxyModel);//test
