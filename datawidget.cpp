@@ -27,38 +27,39 @@ void DataWidget::setupTabs()
 
     //Las serie de pestañas se crea en:
     // Ejemplos -> adressbook -> adresswidget.cpp -> setupTabs()
-/*
+
     QStringList groups;
     groups  << "I/O" << "Solucionador" << "Motor" << "Turbulencia" << "Chispa"
             << "Inyección" << "Termoquímica" << "Válvulas" << "Soot" << "Otros";
 
-    QStringList RegExp;
-    RegExp << "" << "" <<
+    QStringList RegExpList;
+    RegExpList << "irest|nohydro|itype" << "nre" << "nsp" << "nre" << "nsp" << "nre" << "nsp" << "nre"
+           << "nsp" << "nre";
+
     for (int i = 0; i < groups.size(); ++i) {
         QString str = groups.at(i);
-        QString regExp = QString("^[%1].*").arg(str);
+        QString regExp = RegExpList.at(i);
 
-        proxyModel = new QSortFilterProxyModel(this);
-        proxyModel->setSourceModel(table);
+        proxyModel = new TreeProxyModel(this);//test
+        proxyModel->setSourceModel(model);
         proxyModel->setFilterRegExp(QRegExp(regExp, Qt::CaseInsensitive));
-        proxyModel->setFilterKeyColumn(0);
 
-        QTableView *tableView = new QTableView;
-        tableView->setModel(proxyModel);
+        QTreeView *tstTreeView = new QTreeView;
+        tstTreeView->setModel(proxyModel);
 
-        tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
-        tableView->horizontalHeader()->setStretchLastSection(true);
-        tableView->verticalHeader()->hide();
-        tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-        tableView->setSelectionMode(QAbstractItemView::SingleSelection);
+//        tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+//        tableView->horizontalHeader()->setStretchLastSection(true);
+//        tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+//        tableView->setSelectionMode(QAbstractItemView::SingleSelection);
 
-        tableView->setSortingEnabled(true);
+//        tableView->setSortingEnabled(true);
 
+        /*
         connect(tableView->selectionModel(),
             &QItemSelectionModel::selectionChanged,
             this, &AddressWidget::selectionChanged);
-
-        addTab(tableView, str);
+        */
+        addTab(tstTreeView, str);
     }
-    */
+
 }
