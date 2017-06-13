@@ -27,4 +27,38 @@ void DataWidget::setupTabs()
 
     //Las serie de pestañas se crea en:
     // Ejemplos -> adressbook -> adresswidget.cpp -> setupTabs()
+/*
+    QStringList groups;
+    groups  << "I/O" << "Solucionador" << "Motor" << "Turbulencia" << "Chispa"
+            << "Inyección" << "Termoquímica" << "Válvulas" << "Soot" << "Otros";
+
+    QStringList RegExp;
+    RegExp << "" << "" <<
+    for (int i = 0; i < groups.size(); ++i) {
+        QString str = groups.at(i);
+        QString regExp = QString("^[%1].*").arg(str);
+
+        proxyModel = new QSortFilterProxyModel(this);
+        proxyModel->setSourceModel(table);
+        proxyModel->setFilterRegExp(QRegExp(regExp, Qt::CaseInsensitive));
+        proxyModel->setFilterKeyColumn(0);
+
+        QTableView *tableView = new QTableView;
+        tableView->setModel(proxyModel);
+
+        tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+        tableView->horizontalHeader()->setStretchLastSection(true);
+        tableView->verticalHeader()->hide();
+        tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        tableView->setSelectionMode(QAbstractItemView::SingleSelection);
+
+        tableView->setSortingEnabled(true);
+
+        connect(tableView->selectionModel(),
+            &QItemSelectionModel::selectionChanged,
+            this, &AddressWidget::selectionChanged);
+
+        addTab(tableView, str);
+    }
+    */
 }

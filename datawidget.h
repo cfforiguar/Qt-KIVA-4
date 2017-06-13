@@ -2,6 +2,7 @@
 #define DATAWIDGET_H
 
 #include "treemodel.h"
+#include "treeproxymodel.h"
 #include <QTabWidget>
 
 QT_BEGIN_NAMESPACE
