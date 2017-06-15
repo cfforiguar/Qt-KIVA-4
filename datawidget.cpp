@@ -29,13 +29,29 @@ void DataWidget::setupTabs()
     // Ejemplos -> adressbook -> adresswidget.cpp -> setupTabs()
 
     QStringList groups;
-    groups  << "I/O" << "Solucionador" << "Motor" << "Turbulencia" << "Chispa"
-            << "Inyección" << "Termoquímica" << "Válvulas" << "Soot" << "Otros";
+    groups  << "I/O"
+            << "Solucionador"
+            << "Motor"
+            << "Turbulencia"
+            << "Chispa"
+            << "Inyección"
+            << "Termoquímica"
+            << "Válvulas"
+            << "Soot"
+            << "Otros";
 
     QStringList RegExpList;
-    RegExpList << "irest|nohydro|itype" << "nre" << "nsp" << "nre" << "nsp" << "nre" << "nsp" << "nre"
-           << "nsp" << "nre";
+    RegExpList << "lpr|ncfilm|nctap8|nclast|ncmon|ncaspec|gmv|cafilm|cafin|tlimd|twfilm|twfin|atdc|datdc"
+               << "irest|nohydro|itype|itype|irez|angmom|pgssw|dti|dtmxca|dtmax|fchsp|deact|adia|pmplict|lospeed"
+               << "bore|stroke|squish|rpm|atdc|datdc|revrep|conrod|thsect|sector|gx|gy|gz|tcylwl|thead|tpistn"
+               << "lwall|swirl|swipro|epsy|epsv|epsp|epst|epsk|epse|pardon|a0|b0|artvis|ecnsrv|anu0|visrat|turbsw|sgls|airmu1|airmu2"
+               << "xignit|t1ign|tdign|ca1ign|cadign|xignl1|xignr1|yignf1|yignd1|zignb1|zignt1|xignl2|xignr2|yignf2|yignd2|zignb2|zignt2"
+               << "numnoz|numinj|numvel|t1inj|tdinj|ca1inj|cadinj|tspmas|tnparc|pulse|injdist|kolide|tpi|turb|breakup|evapp|numdiv|scf|drnoz|dznoz|dthnoz|tiltxy|tiltxz|cone|dcone|anoz|smr|amp0|diameterinjector|4000.0"
+               << "tcut|tcute|epschm|omgchm|trbchem|capa|airla1|airla2|prl1|rpr|rsc|kwikeq|nsp|stoifuel|stoio2|nrk|nre"
+               << "nregions|presi|tempi|tkei|scli|er|nvalves"
+               << "isoot" << "Otros";
 
+    //	 anu0, lwall, epsk, epse, adia, visrat, trbchem, capa, prl, rpr, rsc, turb
     for (int i = 0; i < groups.size(); ++i) {
         QString str = groups.at(i);
         QString regExp = RegExpList.at(i);
