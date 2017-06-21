@@ -73,15 +73,6 @@ MainWindow::MainWindow(QWidget *parent)
     for (int column = 0; column < model->columnCount(); ++column)
         view->resizeColumnToContents(column);
 
-    //QSortFilterProxyModel testbed --> //test
-    proxyModel = new TreeProxyModel;//test
-    proxyModel->setSourceModel(model);//test
-
-    QRegExp regExp("Output|nsp|mw", Qt::CaseSensitive, QRegExp::RegExp);//test
-    proxyModel->setFilterRegExp(regExp);//test
-
-    treeView->setModel(proxyModel);//test
-
     tabDWidget = new DataWidget;
     horizontalLayout_2->addWidget(tabDWidget);
 
@@ -98,6 +89,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(insertChildAction, &QAction::triggered, this, &MainWindow::insertChild);
 
     updateActions();
+
+    model->printData(model);
 }
 
 void MainWindow::insertChild()

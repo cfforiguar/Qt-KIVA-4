@@ -291,6 +291,29 @@ bool TreeModel::setHeaderData(int section, Qt::Orientation orientation,
     return result;
 }
 
+void TreeModel::printData(const QObject *parent)//(const QString &fileName)
+{
+    QString fileName = "itape5";
+    QFile file(fileName);
+    file.open(QIODevice::ReadWrite);
+
+    /*
+    if (!file.open(QIODevice::WriteOnly)) {
+        QMessageBox::information(this, tr("Unable to open file"), file.errorString());
+        return;
+    }
+    */
+
+    // QModelIndex index(int row, int column,const QModelIndex &parent = QModelIndex()) const override;
+
+    //Leer línea a línea el modelo
+    //QVariant ItemData = parent->data(1);
+    QVariant ItemData = parent->data(0);
+    QTextStream out(&file);
+    out << ItemData.toString();
+    file.close();
+}
+
 void TreeModel::setupModelData(const QStringList &lines, TreeItem *parent)
 {
     QList<TreeItem*> parents;

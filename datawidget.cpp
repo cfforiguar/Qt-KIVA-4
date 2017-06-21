@@ -58,10 +58,13 @@ void DataWidget::setupTabs()
 
         proxyModel = new TreeProxyModel(this);//test
         proxyModel->setSourceModel(model);
-        proxyModel->setFilterRegExp(QRegExp(regExp, Qt::CaseInsensitive));
+        proxyModel->setFilterRegExp(QRegExp(regExp, Qt::CaseInsensitive)); //    QRegExp regExp("Output|nsp|mw", Qt::CaseSensitive, QRegExp::RegExp);//test
 
         QTreeView *tstTreeView = new QTreeView;
         tstTreeView->setModel(proxyModel);
+        for (int column = 0; column < proxyModel->columnCount(); ++column)
+            tstTreeView->resizeColumnToContents(column);
+        //COSA PARA ORGANIZAR: horizontalLayout_2->addWidget(tabDWidget);
 
 //        tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
 //        tableView->horizontalHeader()->setStretchLastSection(true);
@@ -79,3 +82,4 @@ void DataWidget::setupTabs()
     }
 
 }
+

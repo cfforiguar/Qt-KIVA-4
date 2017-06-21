@@ -96,6 +96,7 @@ public:
                     const QModelIndex &parent = QModelIndex()) override;
     bool removeRows(int position, int rows,
                     const QModelIndex &parent = QModelIndex()) override;
+    void printData(QObject *parent);
 
 private:
     void setupModelData(const QStringList &lines, TreeItem *parent);

@@ -17,3 +17,4 @@ SOURCES     = mainwindow.cpp \
 # install
 target.path = $$[QT_INSTALL_EXAMPLES]/widgets/itemviews/editabletreemodel
 INSTALLS += target
+
