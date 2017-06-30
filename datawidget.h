@@ -16,6 +16,7 @@ class DataWidget : public QTabWidget
 
 public:
     DataWidget(QWidget *parent = 0);
+    void printData(const TreeModel *model) const;
 
 private:
     void setupTabs();
