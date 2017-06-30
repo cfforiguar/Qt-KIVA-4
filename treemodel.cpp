@@ -291,7 +291,7 @@ bool TreeModel::setHeaderData(int section, Qt::Orientation orientation,
     return result;
 }
 
-void TreeModel::printData(const QObject *parent)//(const QString &fileName)
+void TreeModel::printData(const QModelIndex &parent)//(const QString &fileName)
 {
     QString fileName = "itape5";
     QFile file(fileName);
@@ -308,7 +308,7 @@ void TreeModel::printData(const QObject *parent)//(const QString &fileName)
 
     //Leer línea a línea el modelo
     //QVariant ItemData = parent->data(1);
-    QVariant ItemData = parent->data(0);
+    QVariant ItemData = data(index(0,0,parent),Qt::DisplayRole);
     QTextStream out(&file);
     out << ItemData.toString();
     file.close();

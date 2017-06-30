@@ -90,7 +90,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     updateActions();
 
-    model->printData(model);
+    //model->printData(model);
 }
 
 void MainWindow::insertChild()

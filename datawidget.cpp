@@ -81,5 +81,86 @@ void DataWidget::setupTabs()
         addTab(tstTreeView, str);
     }
 
-}
+    QString fileName = "ebrio";
+    QFile file1(fileName);
+    file1.open(QIODevice::ReadWrite);
+    QTextStream out(&file1);
+/*
+    if (!file1.open(QIODevice::ReadWrite)) {
+        QMessageBox::information(this, tr("Unable to open file"), file.errorString());
+        return;
+    }
+*/
 
+    QModelIndex CurrId=model->index(0,0);
+    QVariant ItemData = model->data(CurrId,Qt::DisplayRole);
+    out << ItemData.toString();
+    QList<QModelIndex> IdParents;
+    IdParents << model->parent(CurrId);
+
+    int nRows = model->rowCount();
+    int nCols = model->columnCount();
+    int CurrRow =0;
+    int CurrCol =0;
+    int ParentRow = 0;
+    out << "nRows =" << nRows << "\n";
+    out << "nCols =" << nCols << "\n";
+
+    ItemData = model->data(IdParents.last(),Qt::DisplayRole);
+    out << "Padre " <<ItemData.toString() << "\t";
+    out << "\n";
+
+        while (CurrRow < nRows){
+            while (CurrCol < nCols){
+                CurrId= model->index(CurrRow,CurrCol,IdParents.last());
+                ItemData = model->data(CurrId,Qt::DisplayRole);
+                out << ItemData.toString() << "\t";
+                CurrCol = CurrCol+1;
+            }
+            out << "\n";
+            CurrRow = CurrRow+1;
+            CurrCol = 0;
+
+            int CurrIdRows = model->rowCount(CurrId);
+            //Si la fila actual tiene hijos:
+            if (CurrIdRows>0 && IdParents.last()!=CurrId){
+
+                out << "            CON HIJOS " << "TRUE" << "\n";
+                /*
+                out << "            # HIJOS =" << model->rowCount(CurrId)
+                    << " Cols =" << model->columnCount(CurrId) <<" \n";
+
+
+                QModelIndex SonId= model->index(CurrRow-1,0,IdParents.last());
+                ItemData = model->data(SonId,Qt::DisplayRole);
+                out << "NuevoPadre " << ItemData.toString() << "\t";
+                out << "\n";
+
+                QModelIndex SonSonId=model->index(0,0,SonId);
+                ItemData = model->data(SonSonId,Qt::DisplayRole);
+                out << "Hijo " << ItemData.toString() << "\t";
+                out << "\n";
+                */
+                //  agréguela a la lista de padres
+                IdParents << model->index(CurrRow-1,0,IdParents.last());
+                //Reinicie los valores de forma acorde a los nuevos hijos
+                ParentRow=CurrRow-1;
+                nRows=model->rowCount(IdParents.last());
+                nCols=model->columnCount(IdParents.last());
+                CurrRow=0;
+                }
+            //Si ya impirmió el último hijo, continúe
+            if (CurrRow == nRows && IdParents.last()!=IdParents[0]){
+                out << "CurrRow == nRows " << "TRUE" << "\n";
+                IdParents.pop_back();
+                CurrId=IdParents.last();
+                nRows=model->rowCount(CurrId);
+                nCols=model->columnCount(CurrId);
+                out << "            # nRows =" << nRows
+                    << " Cols =" << nCols <<" \n";
+                CurrRow=ParentRow+1;
+                }
+        }
+    file1.close();
+
+}
