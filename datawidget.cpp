@@ -1,26 +1,26 @@
 #include "datawidget.h"
 #include <QtWidgets>
 
-DataWidget::DataWidget(QWidget *parent)
+
+DataWidget::DataWidget(QWidget *parent, const QString &fileName)
     : QTabWidget(parent)
 {
-    tree = new TreeModel(this);
+    //Se carga el modelo orignal basado en el itape5
+    QStringList headers;
+    headers << tr("C1") << tr("C2") << tr("C3") << tr("C4")<< tr("C4")<< tr("C4")<< tr("C4");
+    QFile file(fileName);
+    file.open(QIODevice::ReadOnly);
+    tree = new TreeModel(headers, file.readAll());
+    file.close();
+
     setupTabs();
 }
 void DataWidget::setupTabs()
 {
 
-    //Se carga el modelo orignal basado en el itape5
-    QStringList headers;
-    headers << tr("C1") << tr("C2") << tr("C3") << tr("C4")<< tr("C4")<< tr("C4")<< tr("C4");
-    QFile file(":/default.txt");
-    file.open(QIODevice::ReadOnly);
-    TreeModel *model = new TreeModel(headers, file.readAll());
-    file.close();
-
     //Se crea el visor de tipo árbol y se le asocia el modelo
     QTreeView *tstTreeView = new QTreeView;
-    tstTreeView->setModel(model);
+    tstTreeView->setModel(tree);
 
     //Se asigna el visor a una pestaña
     addTab(tstTreeView, "itape5");
@@ -57,7 +57,7 @@ void DataWidget::setupTabs()
         QString regExp = RegExpList.at(i);
 
         proxyModel = new TreeProxyModel(this);//test
-        proxyModel->setSourceModel(model);
+        proxyModel->setSourceModel(tree);
         proxyModel->setFilterRegExp(QRegExp(regExp, Qt::CaseInsensitive)); //    QRegExp regExp("Output|nsp|mw", Qt::CaseSensitive, QRegExp::RegExp);//test
 
         QTreeView *tstTreeView = new QTreeView;
@@ -80,12 +80,17 @@ void DataWidget::setupTabs()
         */
         addTab(tstTreeView, str);
     }
-    printData(model);
+    printData(tree);
+
+}
+TreeModel *DataWidget::returnTreeModel()
+{
+    return tree;
 }
 
 void DataWidget::printData(const TreeModel *model) const
 {
-    QString fileName = "itape5.out";
+    QString fileName = "itape5";
     QFile file1(fileName);
     file1.open(QIODevice::ReadWrite);
     QTextStream out(&file1);
@@ -99,6 +104,7 @@ void DataWidget::printData(const TreeModel *model) const
     QModelIndex CurrId=model->index(0,0);
     QVariant ItemData = model->data(CurrId,Qt::DisplayRole);
     QList<QModelIndex> IdParents;
+    QString strHolder;
     IdParents << model->parent(CurrId);
 
     int nRows = model->rowCount();
@@ -107,36 +113,39 @@ void DataWidget::printData(const TreeModel *model) const
     int CurrCol =0;
     int ParentRow = 0;
 
-        while (CurrRow < nRows){
-            while (CurrCol < nCols){
-                CurrId= model->index(CurrRow,CurrCol,IdParents.last());
-                ItemData = model->data(CurrId,Qt::DisplayRole);
-                out << ItemData.toString() << "\t";
-                CurrCol = CurrCol+1;
+    while (CurrRow < nRows){
+        while (CurrCol < nCols){
+            CurrId= model->index(CurrRow,CurrCol,IdParents.last());
+            ItemData = model->data(CurrId,Qt::DisplayRole);
+            strHolder=ItemData.toString();
+            if (!strHolder.isEmpty()){
+                out << strHolder << "\t";
             }
-            out << "\n";
-            CurrRow = CurrRow+1;
-            CurrCol = 0;
-
-            int CurrIdRows = model->rowCount(CurrId);
-            //Si la fila actual tiene hijos:
-            if (CurrIdRows>0 && IdParents.last()!=CurrId){
-                //  agréguela a la lista de padres
-                IdParents << model->index(CurrRow-1,0,IdParents.last());
-                //Reinicie los valores de forma acorde a los nuevos hijos
-                ParentRow=CurrRow-1;
-                nRows=model->rowCount(IdParents.last());
-                nCols=model->columnCount(IdParents.last());
-                CurrRow=0;
-                }
-            //Si ya impirmió el último hijo, retome desde el padre anterior + 1
-            if (CurrRow == nRows && IdParents.last()!=IdParents[0]){
-                IdParents.pop_back();
-                CurrId=IdParents.last();
-                nRows=model->rowCount(CurrId);
-                nCols=model->columnCount(CurrId);
-                CurrRow=ParentRow+1;
-                }
+            CurrCol = CurrCol+1;
         }
+        out << "\n";
+        CurrRow = CurrRow+1;
+        CurrCol = 0;
+
+        int CurrIdRows = model->rowCount(CurrId);
+        //Si la fila actual tiene hijos:
+        if (CurrIdRows>0 && IdParents.last()!=CurrId){
+            //  agréguela a la lista de padres
+            IdParents << model->index(CurrRow-1,0,IdParents.last());
+            //Reinicie los valores de forma acorde a los nuevos hijos
+            ParentRow=CurrRow-1;
+            nRows=model->rowCount(IdParents.last());
+            nCols=model->columnCount(IdParents.last());
+            CurrRow=0;
+            }
+        //Si ya impirmió el último hijo, retome desde el padre anterior + 1
+        if (CurrRow == nRows && IdParents.last()!=IdParents[0]){
+            IdParents.pop_back();
+            CurrId=IdParents.last();
+            nRows=model->rowCount(CurrId);
+            nCols=model->columnCount(CurrId);
+            CurrRow=ParentRow+1;
+            }
+    }
     file1.close();
 }

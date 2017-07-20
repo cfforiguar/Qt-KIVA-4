@@ -1,4 +1,4 @@
-QT += widgets
+QT += widgets testlib
 
 FORMS       = mainwindow.ui
 HEADERS     = treeitem.h \

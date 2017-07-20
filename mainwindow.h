@@ -80,6 +80,7 @@ private slots:
     void insertRow();
     bool removeColumn();
     void removeRow();
+    void addMech();
 private://test
     TreeProxyModel *proxyModel;//test
     DataWidget *tabDWidget;

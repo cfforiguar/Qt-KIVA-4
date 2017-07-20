@@ -82,8 +82,15 @@
     <addaction name="separator"/>
     <addaction name="insertChildAction"/>
    </widget>
+   <widget class="QMenu" name="menuAsistente">
+    <property name="title">
+     <string>Asistentes</string>
+    </property>
+    <addaction name="addMechAction"/>
+   </widget>
    <addaction name="fileMenu"/>
    <addaction name="actionsMenu"/>
+   <addaction name="menuAsistente"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="exitAction">
@@ -132,6 +139,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="addMechAction">
+   <property name="text">
+    <string>Añadir mecanismo</string>
    </property>
   </action>
  </widget>

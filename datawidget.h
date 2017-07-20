@@ -15,8 +15,9 @@ class DataWidget : public QTabWidget
     Q_OBJECT
 
 public:
-    DataWidget(QWidget *parent = 0);
+    DataWidget(QWidget *parent = 0, const QString &fileName=":/default.txt");
     void printData(const TreeModel *model) const;
+    TreeModel *returnTreeModel();
 
 private:
     void setupTabs();

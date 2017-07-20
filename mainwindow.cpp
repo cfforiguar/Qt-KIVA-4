@@ -48,11 +48,13 @@
 **
 ****************************************************************************/
 
+#include <QtTest/QtTest>
 #include "mainwindow.h"
 #include "treemodel.h"
 
-#include <QtWidgets>//test
+#include <QtWidgets>
 
+#include <QProcess>
 
 #include <QFile>
 
@@ -73,7 +75,7 @@ MainWindow::MainWindow(QWidget *parent)
     for (int column = 0; column < model->columnCount(); ++column)
         view->resizeColumnToContents(column);
 
-    tabDWidget = new DataWidget;
+    tabDWidget = new DataWidget(0,":/default.txt");
     horizontalLayout_2->addWidget(tabDWidget);
 
     connect(exitAction, &QAction::triggered, qApp, &QCoreApplication::quit);
@@ -87,10 +89,44 @@ MainWindow::MainWindow(QWidget *parent)
     connect(removeRowAction, &QAction::triggered, this, &MainWindow::removeRow);
     connect(removeColumnAction, &QAction::triggered, this, &MainWindow::removeColumn);
     connect(insertChildAction, &QAction::triggered, this, &MainWindow::insertChild);
+    connect(addMechAction, &QAction::triggered, this, &MainWindow::addMech);
 
     updateActions();
 
     //model->printData(model);
+}
+
+void MainWindow::addMech()
+{
+    //Salvar el estado actual del modelo en un archivo
+    TreeModel *TreeMdl = tabDWidget->returnTreeModel();
+    tabDWidget->printData(TreeMdl);
+
+    //Correr el script para modificar dicho archivo
+    QStringList list;
+    QProcess * exec;
+    exec =new QProcess(this);
+    list.clear();
+    list << "PATH=/opt:/opt/p:/bin:export"
+         << "LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib/boost:/usr/local/include/boost:/usr/lib:/home/carlos/opt/sundials-intel/include:/home/carlos/opt/sundials-intel/lib:$LD_LIBRARY_PATH"
+         << "source /home/carlos/.local/bin/setup_cantera"
+         << "source /opt/intel/bin/compilervars.sh intel64";
+    exec->setEnvironment(list);
+    exec->startDetached("./test.sh");
+    exec->waitForStarted(-1);
+    exec->waitForFinished(-1);
+    exec->write ("exit\n\r");
+    exec->close();
+
+//FIXME: Tocó introducir este delay para que el S.O. tenga tiempo de escriir el archivo
+    //Acá una referencia de cómo se podría atacar el problema: https://forum.qt.io/topic/71328/qprocess-startdetached-can-open-the-exe-but-start-cannot/14
+    QTest::qWait(3000);
+
+    //Borrar el modelo y cargar uno nuevo desde el archivo modificado
+    horizontalLayout_2->removeWidget(tabDWidget);
+    tabDWidget = new DataWidget(0,"itape5");
+    horizontalLayout_2->addWidget(tabDWidget);
+
 }
 
 void MainWindow::insertChild()

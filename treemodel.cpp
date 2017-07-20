@@ -64,7 +64,7 @@ TreeModel::TreeModel(const QStringList &headers, const QString &data, QObject *p
     rootItem = new TreeItem(rootData);
 
 
-
+/*
 
     //<MOD>
     TreeItem *parent2;
@@ -101,7 +101,7 @@ TreeModel::TreeModel(const QStringList &headers, const QString &data, QObject *p
     for (int column = 0; column < rootData.size(); ++column)
         parent2->child(parent2->childCount() - 1)->setData(column, rootData[column]);
     //</MOD>
-
+*/
     setupModelData(data.split(QString("\n")), rootItem);
 }
 //! [0]
@@ -309,7 +309,10 @@ void TreeModel::setupModelData(const QStringList &lines, TreeItem *parent)
 
         if (!lineData.isEmpty()) {
             // Read the column data from the rest of the line.
-            QStringList columnStrings = lineData.split(" ", QString::SkipEmptyParts);
+            QStringList columnStrings = lineData.split("\t", QString::SkipEmptyParts);
+            if (columnStrings.count()==1){
+                columnStrings = lineData.split(" ", QString::SkipEmptyParts);
+            }
             QVector<QVariant> columnData;
 
             for (int column = 0; column < columnStrings.count(); ++column)
