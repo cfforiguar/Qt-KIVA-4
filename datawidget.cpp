@@ -15,15 +15,67 @@ DataWidget::DataWidget(QWidget *parent, const QString &fileName)
 
     setupTabs();
 }
+
+void DataWidget::updateActions()
+{
+    QTreeView *view = static_cast<QTreeView*>(currentWidget());
+
+    bool hasSelection = !view->selectionModel()->selection().isEmpty();
+//    removeRowAction->setEnabled(hasSelection);
+//    removeColumnAction->setEnabled(hasSelection);
+
+    bool hasCurrent = view->selectionModel()->currentIndex().isValid();
+//    insertRowAction->setEnabled(hasCurrent);
+//    insertColumnAction->setEnabled(hasCurrent);
+
+    if (hasCurrent) {
+        view->closePersistentEditor(view->selectionModel()->currentIndex());
+
+        int row = view->selectionModel()->currentIndex().row();
+        int column = view->selectionModel()->currentIndex().column();
+//        if (view->selectionModel()->currentIndex().parent().isValid())
+//            statusBar()->showMessage(tr("Position: (%1,%2)").arg(row).arg(column));
+//        else
+//            statusBar()->showMessage(tr("Position: (%1,%2) in top level").arg(row).arg(column));
+    }
+}
+
+void DataWidget::insertChild()
+{
+    QTreeView *view = static_cast<QTreeView*>(currentWidget());
+
+    QModelIndex index = view->selectionModel()->currentIndex();
+    QAbstractItemModel *model = view->model();
+
+    if (model->columnCount(index) == 0) {
+        if (!model->insertColumn(0, index))
+            return;
+    }
+
+    if (!model->insertRow(0, index))
+        return;
+
+    for (int column = 0; column < model->columnCount(index); ++column) {
+        QModelIndex child = model->index(0, column, index);
+        model->setData(child, QVariant("[No data]"), Qt::EditRole);
+        if (!model->headerData(column, Qt::Horizontal).isValid())
+            model->setHeaderData(column, Qt::Horizontal, QVariant("[No header]"), Qt::EditRole);
+    }
+
+    view->selectionModel()->setCurrentIndex(model->index(0, 0, index),
+                                            QItemSelectionModel::ClearAndSelect);
+    updateActions();
+}
+
 void DataWidget::setupTabs()
 {
 
     //Se crea el visor de tipo árbol y se le asocia el modelo
-    QTreeView *tstTreeView = new QTreeView;
-    tstTreeView->setModel(tree);
+    QTreeView *TreeView = new QTreeView;
+    TreeView->setModel(tree);
 
     //Se asigna el visor a una pestaña
-    addTab(tstTreeView, "itape5");
+    addTab(TreeView, "itape5");
 
     //Las serie de pestañas se crea en:
     // Ejemplos -> adressbook -> adresswidget.cpp -> setupTabs()
@@ -60,10 +112,10 @@ void DataWidget::setupTabs()
         proxyModel->setSourceModel(tree);
         proxyModel->setFilterRegExp(QRegExp(regExp, Qt::CaseInsensitive)); //    QRegExp regExp("Output|nsp|mw", Qt::CaseSensitive, QRegExp::RegExp);//test
 
-        QTreeView *tstTreeView = new QTreeView;
-        tstTreeView->setModel(proxyModel);
+        QTreeView *TreeView = new QTreeView;
+        TreeView->setModel(proxyModel);
         for (int column = 0; column < proxyModel->columnCount(); ++column)
-            tstTreeView->resizeColumnToContents(column);
+            TreeView->resizeColumnToContents(column);
         //COSA PARA ORGANIZAR: horizontalLayout_2->addWidget(tabDWidget);
 
 //        tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -73,12 +125,13 @@ void DataWidget::setupTabs()
 
 //        tableView->setSortingEnabled(true);
 
-        /*
-        connect(tableView->selectionModel(),
+
+        connect(TreeView->selectionModel(),
             &QItemSelectionModel::selectionChanged,
-            this, &AddressWidget::selectionChanged);
-        */
-        addTab(tstTreeView, str);
+            this, &DataWidget::selectionChanged);
+
+
+        addTab(TreeView, str);
     }
     printData(tree);
 

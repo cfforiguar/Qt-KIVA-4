@@ -75,7 +75,7 @@ public slots:
     void updateActions();
 
 private slots:
-    void insertChild();
+    //void insertChild();
     bool insertColumn();
     void insertRow();
     bool removeColumn();

@@ -88,7 +88,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(insertColumnAction, &QAction::triggered, this, &MainWindow::insertColumn);
     connect(removeRowAction, &QAction::triggered, this, &MainWindow::removeRow);
     connect(removeColumnAction, &QAction::triggered, this, &MainWindow::removeColumn);
-    connect(insertChildAction, &QAction::triggered, this, &MainWindow::insertChild);
+
+        connect(insertChildAction, &QAction::triggered, tabDWidget, &DataWidget::insertChild);
+
     connect(addMechAction, &QAction::triggered, this, &MainWindow::addMech);
 
     updateActions();
@@ -129,6 +131,7 @@ void MainWindow::addMech()
 
 }
 
+/*
 void MainWindow::insertChild()
 {
     QModelIndex index = view->selectionModel()->currentIndex();
@@ -153,6 +156,7 @@ void MainWindow::insertChild()
                                             QItemSelectionModel::ClearAndSelect);
     updateActions();
 }
+*/
 
 bool MainWindow::insertColumn()
 {
