@@ -142,7 +142,11 @@ Qt::ItemFlags TreeModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
         return 0;
-    if (index.column()% 2==0){
+    QVariant value = data(index,Qt::DisplayRole);
+    QString Qs = value.toString();
+    bool isFloat;
+    Qs.toFloat(&isFloat);
+    if (!isFloat){
         return  QAbstractItemModel::flags(index);
     } else {
         return Qt::ItemIsEditable | QAbstractItemModel::flags(index);
