@@ -47,6 +47,35 @@ void DataWidget::insertChild()
     QModelIndex index = view->selectionModel()->currentIndex();
     QAbstractItemModel *model = view->model();
 
+    QVariant value = model->data(index,Qt::DisplayRole);
+    QString Qs = value.toString();
+    QStringList q2;
+        q2 << "ncaspec"
+           << "numvel"
+           << "scf"
+           << "nsp"
+           << "nrk"
+           << "nre";
+        //munvel, pero está en otro lado
+    QStringList childData;
+    bool kWordFound = false;
+    for (int i = 0; i < q2.size(); ++i){
+        if (Qs.compare(q2[i],Qt::CaseInsensitive)==0){
+            kWordFound=true;
+            switch (i){ //case in string q2[i]
+            case 0:     //case in string q2[0]
+                childData << "0.0";
+            }
+            break;
+        }
+    }
+    if (kWordFound==false){
+        return;
+    }
+    for (int column = 0; column < model->columnCount(index); ++column) {
+        childData << "";
+    }
+
     if (model->columnCount(index) == 0) {
         if (!model->insertColumn(0, index))
             return;
@@ -57,10 +86,22 @@ void DataWidget::insertChild()
 
     for (int column = 0; column < model->columnCount(index); ++column) {
         QModelIndex child = model->index(0, column, index);
-        model->setData(child, QVariant("[No data]"), Qt::EditRole);
+
+        model->setData(child, QVariant(childData[column]), Qt::EditRole);
+
         if (!model->headerData(column, Qt::Horizontal).isValid())
             model->setHeaderData(column, Qt::Horizontal, QVariant("[No header]"), Qt::EditRole);
     }
+
+    QModelIndex SelfNumber = model->index(index.row(), 1, index.parent());
+    QVariant intValue =  model->data(SelfNumber,Qt::DisplayRole);
+    QString StrIntValue = intValue.toString();
+    bool isFloat;
+    StrIntValue.toFloat(&isFloat);
+    if (isFloat){
+        StrIntValue=QString::number(StrIntValue.toFloat()+1);
+    }
+    model->setData(SelfNumber, QVariant(model->rowCount(index)), Qt::EditRole);
 
     view->selectionModel()->setCurrentIndex(model->index(0, 0, index),
                                             QItemSelectionModel::ClearAndSelect);
