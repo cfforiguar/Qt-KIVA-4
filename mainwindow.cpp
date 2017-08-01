@@ -90,6 +90,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(removeColumnAction, &QAction::triggered, this, &MainWindow::removeColumn);
 
         connect(insertChildAction, &QAction::triggered, tabDWidget, &DataWidget::insertChild);
+        //***************
+        connect(addReacAction, &QAction::triggered, tabDWidget, &DataWidget::showAddManualMech);
+        //***************
 
     connect(addMechAction, &QAction::triggered, this, &MainWindow::addMech);
 

@@ -5,14 +5,16 @@ HEADERS     = treeitem.h \
               treemodel.h \
               datawidget.h \
               mainwindow.h \
-    treeproxymodel.h
+    treeproxymodel.h \
+    addchemdialog.h
 RESOURCES   = QtGUI.qrc
 SOURCES     = mainwindow.cpp \
               treeitem.cpp \
               treemodel.cpp \
               datawidget.cpp\
               main.cpp \
-    treeproxymodel.cpp
+    treeproxymodel.cpp \
+    addchemdialog.cpp
 
 # install
 target.path = $$[QT_INSTALL_EXAMPLES]/widgets/itemviews/editabletreemodel

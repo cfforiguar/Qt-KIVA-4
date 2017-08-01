@@ -48,64 +48,124 @@ void DataWidget::insertChild()
     QAbstractItemModel *model = view->model();
 
     QVariant value = model->data(index,Qt::DisplayRole);
-    QString Qs = value.toString();
-    QStringList q2;
-        q2 << "ncaspec"
-           << "numvel"
-           << "scf"
-           << "nsp"
-           << "nrk"
-           << "nre";
-        //munvel, pero está en otro lado
+    QString keyWord = value.toString();
+    QStringList WordList;
+        WordList << "ncaspec"
+                 << "numinj" // ->Sinmple?? if numnoz=0, problema---> numinj=0, tb problema...
+                 << "numnoz" // ->Simple -> se añade en scf!! junto con velinj...
+                 << "numvel" //Mirar bien cómo es numinj
+                 << "nsp" // llenar er tb, en función de nsp, ¿qué hacer con nspl?->¿Crear asistente aparte?
+                 << "nrk" // mod trbchem, tener en cuenta nsp
+                 << "nre"; // mod trbchem, tener en cuenta nsp
+                    //munvel, pero está en otro lado
     QStringList childData;
+    QList<QStringList> childDataList;
+    QString  parentWord= "";
     bool kWordFound = false;
-    for (int i = 0; i < q2.size(); ++i){
-        if (Qs.compare(q2[i],Qt::CaseInsensitive)==0){
+    for (int i = 0; i < WordList.size(); ++i){
+        if (keyWord.compare(WordList[i],Qt::CaseInsensitive)==0){
             kWordFound=true;
-            switch (i){ //case in string q2[i]
-            case 0:     //case in string q2[0]
-                childData << "0.0";
+            switch (i){ //case in string WordList[i]
+            case 0:     //case in string WordList[0]
+                childData << "0.0";childDataList << childData;
+                parentWord = keyWord;
+                break;
+            case 1:
+
+                break;
+            case 2://case in string WordList[2]
+                childData << "drnoz" << "0.0";childDataList << childData; childData.clear();
+                childData << "dznoz" << "0.0";childDataList << childData; childData.clear();
+                childData << "dthnoz" << "0.0";childDataList << childData; childData.clear();
+                childData << "tiltxy" << "0.0";childDataList << childData; childData.clear();
+                childData << "tiltxz" << "0.0";childDataList << childData; childData.clear();
+                childData << "cone" << "0.0";childDataList << childData; childData.clear();
+                childData << "dcone" << "0.0";childDataList << childData; childData.clear();
+                childData << "anoz" << "0.0";childDataList << childData; childData.clear();
+                childData << "smr" << "0.0";childDataList << childData; childData.clear();
+                childData << "amp0" << "0.0";childDataList << childData; childData.clear();
+                childData << "diameterinjector" << "0.0";childDataList << childData; childData.clear();
+
+                parentWord = "scf";
+                break;
+            case 3:
+
+                break;
+            case 4:
+                break;
+            case 5:
+                childData << "cf" << "0.0" << "ef" << "0.0" << "zetaf" << "0.0";childDataList << childData;
+                childData.clear();
+                childData << "cb" << "0.0" << "eb" << "0.0" << "zetab" << "0.0";childDataList << childData;
+                childData.clear();
+/*                childData << "am" << "0.0"  0.0 * ????; //contar nsp
+                childData << "bm" << "0.0"  0.0 * ????;
+                childData << "ae" << "0.0"  0.0 * ????;
+                childData << "ae" << "0.0"  0.0 * ????;*/
+                break;
+            case 6:
+
+                break;
             }
             break;
         }
     }
+
+    //Encuentra los índices donde van los hijos desplazados
+    QModelIndexList indexList=model->match(index, Qt::DisplayRole, QVariant(parentWord), 1, Qt::MatchStartsWith);
+    index=indexList[0];
+    //TODO: Buscar forma de eliminar los hijos una vez ya han sido creados
+
     if (kWordFound==false){
         return;
     }
-    for (int column = 0; column < model->columnCount(index); ++column) {
-        childData << "";
-    }
 
-    if (model->columnCount(index) == 0) {
-        if (!model->insertColumn(0, index))
+    for (int i = 0; i < childDataList.size(); ++i) {
+        childData=childDataList[i];
+
+        for (int column = 0; column < model->columnCount(index); ++column) {
+            childData << "";
+        }
+        if (model->columnCount(index) == 0) {
+            if (!model->insertColumn(0, index))
+                return;
+        }
+        if (!model->insertRow(0, index))
             return;
+        for (int column = 0; column < model->columnCount(index); ++column) {
+            QModelIndex child = model->index(0, column, index);
+
+            model->setData(child, QVariant(childData[column]), Qt::EditRole);
+
+            if (!model->headerData(column, Qt::Horizontal).isValid())
+                model->setHeaderData(column, Qt::Horizontal, QVariant("[No header]"), Qt::EditRole);
+        }
+
+        QModelIndex SelfNumber = model->index(index.row(), 1, index.parent());
+        model->setData(SelfNumber, QVariant(model->rowCount(index)/childData.size()), Qt::EditRole);
+
+        //model->setData(SelfNumber, QVariant(childDataList[0][0]), Qt::EditRole);
     }
-
-    if (!model->insertRow(0, index))
-        return;
-
-    for (int column = 0; column < model->columnCount(index); ++column) {
-        QModelIndex child = model->index(0, column, index);
-
-        model->setData(child, QVariant(childData[column]), Qt::EditRole);
-
-        if (!model->headerData(column, Qt::Horizontal).isValid())
-            model->setHeaderData(column, Qt::Horizontal, QVariant("[No header]"), Qt::EditRole);
-    }
-
-    QModelIndex SelfNumber = model->index(index.row(), 1, index.parent());
-    QVariant intValue =  model->data(SelfNumber,Qt::DisplayRole);
-    QString StrIntValue = intValue.toString();
-    bool isFloat;
-    StrIntValue.toFloat(&isFloat);
-    if (isFloat){
-        StrIntValue=QString::number(StrIntValue.toFloat()+1);
-    }
-    model->setData(SelfNumber, QVariant(model->rowCount(index)), Qt::EditRole);
-
     view->selectionModel()->setCurrentIndex(model->index(0, 0, index),
                                             QItemSelectionModel::ClearAndSelect);
     updateActions();
+}
+
+void DataWidget::showAddManualMech()
+{
+    AddChemDialog aDialog;
+
+    if (aDialog.exec()) {
+        /*
+        ***************************
+        QString name = aDialog.nameText->text();
+        QString address = aDialog.addressText->toPlainText();
+
+        addEntry(name, address);
+        ****************************
+        ****************************
+        */
+    }
 }
 
 void DataWidget::setupTabs()

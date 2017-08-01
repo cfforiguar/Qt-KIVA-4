@@ -87,6 +87,7 @@
      <string>Asistentes</string>
     </property>
     <addaction name="addMechAction"/>
+    <addaction name="addReacAction"/>
    </widget>
    <addaction name="fileMenu"/>
    <addaction name="actionsMenu"/>
@@ -144,6 +145,11 @@
   <action name="addMechAction">
    <property name="text">
     <string>Añadir mecanismo</string>
+   </property>
+  </action>
+  <action name="addReacAction">
+   <property name="text">
+    <string>Añadir reacciones</string>
    </property>
   </action>
  </widget>

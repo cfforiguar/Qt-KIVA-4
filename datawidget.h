@@ -3,6 +3,7 @@
 
 #include "treemodel.h"
 #include "treeproxymodel.h"
+#include "addchemdialog.h"
 #include <QItemSelection>
 #include <QTabWidget>
 
@@ -23,6 +24,7 @@ public:
 public slots:
     void updateActions();
     void insertChild();
+    void showAddManualMech();
 
 signals:
     void selectionChanged (const QItemSelection &selected);
