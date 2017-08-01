@@ -31,6 +31,7 @@ signals:
 
 private:
     void setupTabs();
+    void insertChildAssist(QAbstractItemModel *model, QList<QStringList> childDataList, QString parentWord, QModelIndex index);
 
     TreeModel *tree;
     QSortFilterProxyModel *proxyModel;

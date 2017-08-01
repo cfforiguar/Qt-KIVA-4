@@ -87,6 +87,7 @@ void DataWidget::insertChild()
                 childData << "diameterinjector" << "0.0";childDataList << childData; childData.clear();
 
                 parentWord = "scf";
+                //FIXME: hacer que modifique numnoz en vez de scf, pues es un error...
                 break;
             case 3:
 
@@ -111,14 +112,24 @@ void DataWidget::insertChild()
         }
     }
 
+    if (kWordFound==false){
+        return;
+    }
+
+    insertChildAssist(model, childDataList ,parentWord,index);
+    view->selectionModel()->setCurrentIndex(model->index(0, 0, index),
+                                            QItemSelectionModel::ClearAndSelect);
+    updateActions();
+}
+
+void DataWidget::insertChildAssist(QAbstractItemModel *model, QList<QStringList> childDataList, QString parentWord, QModelIndex index){
+
     //Encuentra los índices donde van los hijos desplazados
     QModelIndexList indexList=model->match(index, Qt::DisplayRole, QVariant(parentWord), 1, Qt::MatchStartsWith);
     index=indexList[0];
     //TODO: Buscar forma de eliminar los hijos una vez ya han sido creados
 
-    if (kWordFound==false){
-        return;
-    }
+    QStringList childData;
 
     for (int i = 0; i < childDataList.size(); ++i) {
         childData=childDataList[i];
@@ -144,11 +155,8 @@ void DataWidget::insertChild()
         QModelIndex SelfNumber = model->index(index.row(), 1, index.parent());
         model->setData(SelfNumber, QVariant(model->rowCount(index)/childData.size()), Qt::EditRole);
 
-        //model->setData(SelfNumber, QVariant(childDataList[0][0]), Qt::EditRole);
     }
-    view->selectionModel()->setCurrentIndex(model->index(0, 0, index),
-                                            QItemSelectionModel::ClearAndSelect);
-    updateActions();
+
 }
 
 void DataWidget::showAddManualMech()
@@ -156,15 +164,47 @@ void DataWidget::showAddManualMech()
     AddChemDialog aDialog;
 
     if (aDialog.exec()) {
-        /*
-        ***************************
-        QString name = aDialog.nameText->text();
-        QString address = aDialog.addressText->toPlainText();
+        QString nsp = aDialog.nspText->text();
+        QString nrk = aDialog.nrkText->text();
+        QString nre = aDialog.nreText->text();
+        QStringList SpeciesList = aDialog.speciesText->toPlainText().split(QString("\n"));
 
-        addEntry(name, address);
-        ****************************
-        ****************************
-        */
+        //TODO: añadir control de errores
+         //¿SpeciesList.size()==nsp?
+         //¿nsp, nre y nrk son números?
+/*
+        //TODO: Entrar los datos anteriores al modelo
+        QTreeView *view = static_cast<QTreeView*>(currentWidget());
+        QAbstractItemModel *model = view->model();
+
+        QModelIndex index = view->selectionModel()->currentIndex();
+
+        childData << "cf" << "0.0" << "ef" << "0.0" << "zetaf" << "0.0";childDataList << childData;
+        childData.clear();
+        childData << "cb" << "0.0" << "eb" << "0.0" << "zetab" << "0.0";childDataList << childData;
+        childData.clear();
+
+
+        childData << "am" << "0.0"  0.0 * ????; //contar nsp
+        childData << "bm" << "0.0"  0.0 * ????;
+        childData << "ae" << "0.0"  0.0 * ????;
+        childData << "ae" << "0.0"  0.0 * ????;
+*/
+//        insertChildAssist(QAbstractItemModel *model, QList<QStringList> childDataList, QString parentWord, QModelIndex index)
+
+/*
+                Borrar todo
+                Mod trbchem
+                Pedir nsp
+                Pedir nombres de especies
+                Pedir # de reacciones
+                hacer mfrac
+                ¿datahk?  ---> se dejan las 12 especies, se aprovecha el bug en el cual no verifica el número de especies en el datahk
+                entrar nre
+                entrar # de reacciones
+*/
+
+
     }
 }
 
@@ -237,6 +277,7 @@ void DataWidget::setupTabs()
     printData(tree);
 
 }
+
 TreeModel *DataWidget::returnTreeModel()
 {
     return tree;
