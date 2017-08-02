@@ -304,7 +304,7 @@ void TreeModel::setupModelData(const QStringList &lines, TreeItem *parent)
     int number = 0;
     int PlaceWord = 0;
     QStringList ParentWords;
-    ParentWords << "ncaspec" << "numinj" << "scf" << "nsp" << "er," << "nrk" << "nre" << "isoot";
+    ParentWords << "ncaspec" << "numinj" << "scf" << "nsp" << "er" << "nrk" << "nre" << "isoot";
     QStringList EndWords;
     EndWords << "gmv" << "injdist" << "nsp" << "stoifuel" << "nrk" << "nre" << "nvalves" << "_";
     while (number < lines.count()) {

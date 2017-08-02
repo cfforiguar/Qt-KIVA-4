@@ -8,6 +8,10 @@
 AddChemDialog::AddChemDialog(QWidget *parent)
     : QDialog(parent)
 {
+    //TODO: añadir casos de nspl
+    //-Crear layout para las cajitas de bicho con labels
+    //-Crear cajitas con los labels de los cmobustibles
+    //-Devolver Qstringlist con los combustibles seleccionados
     nspLabel = new QLabel(tr("Número de especies (nsp)"));
     nrkLabel = new QLabel(tr("Número de reacciones de cinética (nrk)"));
     nreLabel = new QLabel(tr("Número de reacciones de equilibrio  (nre)"));

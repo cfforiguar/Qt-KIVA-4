@@ -125,7 +125,7 @@ void DataWidget::insertChild()
 void DataWidget::insertChildAssist(QAbstractItemModel *model, QList<QStringList> childDataList, QString parentWord, QModelIndex index){
 
     //Encuentra los índices donde van los hijos desplazados
-    QModelIndexList indexList=model->match(index, Qt::DisplayRole, QVariant(parentWord), 1, Qt::MatchStartsWith);
+    QModelIndexList indexList=model->match(index, Qt::DisplayRole, QVariant(parentWord), 1, Qt::MatchExactly);
     index=indexList[0];
     //TODO: Buscar forma de eliminar los hijos una vez ya han sido creados
 
@@ -134,17 +134,19 @@ void DataWidget::insertChildAssist(QAbstractItemModel *model, QList<QStringList>
     for (int i = 0; i < childDataList.size(); ++i) {
         childData=childDataList[i];
 
+        int NChilds = model->rowCount(index);
+
         for (int column = 0; column < model->columnCount(index); ++column) {
             childData << "";
         }
         if (model->columnCount(index) == 0) {
-            if (!model->insertColumn(0, index))
+            if (!model->insertColumn(NChilds, index))
                 return;
         }
-        if (!model->insertRow(0, index))
+        if (!model->insertRow(NChilds, index))
             return;
         for (int column = 0; column < model->columnCount(index); ++column) {
-            QModelIndex child = model->index(0, column, index);
+            QModelIndex child = model->index(NChilds, column, index);
 
             model->setData(child, QVariant(childData[column]), Qt::EditRole);
 
@@ -153,10 +155,21 @@ void DataWidget::insertChildAssist(QAbstractItemModel *model, QList<QStringList>
         }
 
         QModelIndex SelfNumber = model->index(index.row(), 1, index.parent());
-        model->setData(SelfNumber, QVariant(model->rowCount(index)/childData.size()), Qt::EditRole);
+        model->setData(SelfNumber, QVariant(model->rowCount(index)/childDataList.size()), Qt::EditRole);
 
     }
 
+}
+
+void DataWidget::matchReplace(QString keyword, QString NewData, int Column,QAbstractItemModel *model,QModelIndex index){
+    //Busca en model el item que contenga la palabra keyword y reemplaza los datos de la columna Column con el valor en NewData
+
+    //index= model->index(0, 0)
+
+    QModelIndexList indexList=model->match(index, Qt::DisplayRole, QVariant(keyword), 1, Qt::MatchExactly);
+    index=indexList[0];
+    QModelIndex SelfNumber = model->index(index.row(), Column, index.parent());
+    model->setData(SelfNumber, QVariant(NewData), Qt::EditRole);
 }
 
 void DataWidget::showAddManualMech()
@@ -170,40 +183,77 @@ void DataWidget::showAddManualMech()
         QStringList SpeciesList = aDialog.speciesText->toPlainText().split(QString("\n"));
 
         //TODO: añadir control de errores
-         //¿SpeciesList.size()==nsp?
-         //¿nsp, nre y nrk son números?
-/*
-        //TODO: Entrar los datos anteriores al modelo
+          //nsp > 0 o no vacío
+          //¿SpeciesList.size()==nsp?
+          //¿nsp, nre y nrk son números?
+
+        //TODO:Borrar todos los hijos y tales
+
+        //Entra los datos de nsp, nrk, nre, mfrac
         QTreeView *view = static_cast<QTreeView*>(currentWidget());
         QAbstractItemModel *model = view->model();
 
-        QModelIndex index = view->selectionModel()->currentIndex();
+        QModelIndex index = model->index(0, 0);
 
-        childData << "cf" << "0.0" << "ef" << "0.0" << "zetaf" << "0.0";childDataList << childData;
-        childData.clear();
-        childData << "cb" << "0.0" << "eb" << "0.0" << "zetab" << "0.0";childDataList << childData;
-        childData.clear();
+        QStringList childData;
+        QList<QStringList> childDataList;
 
+        QString StrN="";
 
-        childData << "am" << "0.0"  0.0 * ????; //contar nsp
-        childData << "bm" << "0.0"  0.0 * ????;
-        childData << "ae" << "0.0"  0.0 * ????;
-        childData << "ae" << "0.0"  0.0 * ????;
-*/
-//        insertChildAssist(QAbstractItemModel *model, QList<QStringList> childDataList, QString parentWord, QModelIndex index)
+        //Pone el valor adecuado de trbchem
+        matchReplace("trbchem", QString("0"), 2, model, model->index(0, 0));
 
-/*
-                Borrar todo
-                Mod trbchem
-                Pedir nsp
-                Pedir nombres de especies
-                Pedir # de reacciones
-                hacer mfrac
-                ¿datahk?  ---> se dejan las 12 especies, se aprovecha el bug en el cual no verifica el número de especies en el datahk
-                entrar nre
-                entrar # de reacciones
-*/
+        //Pone el valor adecuado en las otras columnas de nrk
+        matchReplace("nrk", QString(""), 2, model, model->index(0, 0));
+        matchReplace("nrk", QString(""), 3, model, model->index(0, 0));
+        for (int i = 1; i<= nrk.toInt(); ++i) {
+            StrN=QString::number(i);
+            childData << "cf"+StrN << "0.0" << "ef"+StrN << "0.0" << "zetaf"+StrN << "0.0";
+            childDataList << childData; childData.clear();
+            childData << "cb"+StrN << "0.0" << "eb"+StrN << "0.0" << "zetab"+StrN << "0.0";
+            childDataList << childData; childData.clear();
+            childData << "blank";
+            for (int column = 0; column < nsp.toInt(); ++column) {
+                childData << "0.0";
+            }
+            childData.replace(0,"am"+StrN); childDataList << childData;
+            childData.replace(0,"bm"+StrN); childDataList << childData;
+            childData.replace(0,"ae"+StrN); childDataList << childData;
+            childData.replace(0,"be"+StrN); childDataList << childData;
+            insertChildAssist(model, childDataList, QString("nrk"), index);
+            childData.clear();
+            childDataList.clear();
+        }
 
+        for (int i = 1; i<= nre.toInt(); ++i) {
+            StrN=QString::number(i);
+            childData << "as"+StrN << "0.0" << "bs"+StrN << "0.0" << "cs"+StrN << "0.0"
+                      << "ds"+StrN << "0.0" << "es"+StrN << "0.0";
+            childDataList << childData; childData.clear();
+            childData << "blank";
+            for (int column = 0; column < nsp.toInt(); ++column) {
+                childData << "0.0";
+            }
+            childData.replace(0,"an"+StrN); childDataList << childData;
+            childData.replace(0,"bn"+StrN); childDataList << childData;
+            insertChildAssist(model, childDataList, QString("nre"), index);
+            childData.clear();
+            childDataList.clear();
+        }
+        //FIXME:¿datahk?  ---> se dejan las 12 especies, se aprovecha el bug de KIVA en el cual no verifica el número de especies en el datahk
+
+        //TODO: ¿qué hacer con nspl?
+        //Pone el valor adecuado de nspl
+        //matchReplace("nsp", nspl, 2 , model, model->index(0, 0));
+
+        //Hacer mfrac de cada especie
+        for (int i = 0; i< nsp.toInt(); ++i) {
+            childData << "mfrac"+SpeciesList.at(i) << "0.0";
+            childDataList << childData; childData.clear();
+            insertChildAssist(model, childDataList, QString("er"), index);
+            childData.clear();
+            childDataList.clear();
+        }
 
     }
 }

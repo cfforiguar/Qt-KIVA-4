@@ -172,59 +172,59 @@ o2c8h16ooh mw36   177.22058 htf36  -58.29470
 stoifuel     4.0
   stoio2    49.0
 nregions     1
- presi,      1.062e+6
- tempi,    355.0
- tkei,       0.02
- scli,       3.11
-  er,        0.0
- mfracfu,    0.054137
- mfraco2,    0.18958
- mfracn2,    0.7198
- mfracco2,   0.024989
- mfrach2o,   0.011499
- mfrach,     0.0
- mfrach2,    0.0
- mfraco,     0.0
- mfracn,     0.0
- mfracoh,    0.0
- mfracco,    0.0
- mfracno,    0.0
-mfracch4,         0.000000E+00
-mfracch3o,        0.000000E+00
-mfracch2o,        0.000000E+00
-mfrachco,         0.000000E+00
-mfracch3,         0.000000E+00
-mfracc2h3,        0.000000E+00
-mfracc2h4,        0.000000E+00
-mfracc2h5,        0.000000E+00
-mfracc3h4,        0.000000E+00
-mfracc3h5,        0.000000E+00
-mfracc3h6,        0.000000E+00
-mfracc3h7,        0.000000E+00
-mfracc7h16,       0.000000E+00
-mfracc7h15,       0.000000E+00
-mfracc7h15o2,     0.000000E+00
-mfracc7h14ooh,    0.000000E+00
-mfraco2c7h14ooh,  0.000000E+00
-mfracc7ket,       0.000000E+00
-mfracc5h11co,     0.000000E+00
-mfracc7h14,       0.000000E+00
-mfracc8h17,       0.000000E+00
-mfracc8h17o2,     0.000000E+00
-mfracc8h16ooh,    0.000000E+00
-mfraco2c8h16ooh,  0.000000E+00
-mfracc8ket,       0.000000E+00
-mfracc6h13co,     0.000000E+00
-mfracc8h16,       0.000000E+00
-mfrach2o2,        0.000000E+00
-mfracn2o,         0.000000E+00
-mfracho2,         0.000000E+00
-mfracno2,         0.000000E+00
-mfracch2oh,       0.000000E+00
-mfracch3oh,       0.000000E+00
-mfracc2h2,        0.000000E+00
-mfracch2co,       0.000000E+00
-mfrachcco,        0.000000E+00
+ presi      1.062e+6
+ tempi    355.0
+ tkei       0.02
+ scli       3.11
+  er        0.0
+ mfracfu    0.054137
+ mfraco2    0.18958
+ mfracn2    0.7198
+ mfracco2   0.024989
+ mfrach2o   0.011499
+ mfrach     0.0
+ mfrach2    0.0
+ mfraco     0.0
+ mfracn     0.0
+ mfracoh    0.0
+ mfracco    0.0
+ mfracno    0.0
+mfracch4         0.000000E+00
+mfracch3o        0.000000E+00
+mfracch2o        0.000000E+00
+mfrachco         0.000000E+00
+mfracch3         0.000000E+00
+mfracc2h3        0.000000E+00
+mfracc2h4        0.000000E+00
+mfracc2h5        0.000000E+00
+mfracc3h4        0.000000E+00
+mfracc3h5        0.000000E+00
+mfracc3h6        0.000000E+00
+mfracc3h7        0.000000E+00
+mfracc7h16       0.000000E+00
+mfracc7h15       0.000000E+00
+mfracc7h15o2     0.000000E+00
+mfracc7h14ooh    0.000000E+00
+mfraco2c7h14ooh  0.000000E+00
+mfracc7ket       0.000000E+00
+mfracc5h11co     0.000000E+00
+mfracc7h14       0.000000E+00
+mfracc8h17       0.000000E+00
+mfracc8h17o2     0.000000E+00
+mfracc8h16ooh    0.000000E+00
+mfraco2c8h16ooh  0.000000E+00
+mfracc8ket       0.000000E+00
+mfracc6h13co     0.000000E+00
+mfracc8h16       0.000000E+00
+mfrach2o2        0.000000E+00
+mfracn2o         0.000000E+00
+mfracho2         0.000000E+00
+mfracno2         0.000000E+00
+mfracch2oh       0.000000E+00
+mfracch3oh       0.000000E+00
+mfracc2h2        0.000000E+00
+mfracch2co       0.000000E+00
+mfrachcco        0.000000E+00
   nrk     175  20.428   0.0
   nre       0
  nvalves  0

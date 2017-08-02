@@ -32,7 +32,7 @@ signals:
 private:
     void setupTabs();
     void insertChildAssist(QAbstractItemModel *model, QList<QStringList> childDataList, QString parentWord, QModelIndex index);
-
+    void matchReplace(QString keyword, QString NewData, int Column,QAbstractItemModel *model,QModelIndex index);
     TreeModel *tree;
     QSortFilterProxyModel *proxyModel;
 
