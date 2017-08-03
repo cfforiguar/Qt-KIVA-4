@@ -5,6 +5,9 @@
 
 
 #include <QDialog>
+#include <QSpinBox>
+#include <QCheckBox>
+#include <QMessageBox>
 
 QT_BEGIN_NAMESPACE
 class QLabel;
@@ -20,16 +23,21 @@ class AddChemDialog : public QDialog
 
 public:
     AddChemDialog(QWidget *parent = 0);
-    QLineEdit *nspText;
-    QLineEdit *nrkText;
-    QLineEdit *nreText;
+    QSpinBox *nspText;
+    QSpinBox *nrkText;
+    QSpinBox *nreText;
     QTextEdit *speciesText;
+    QStringList LSpeciesList;
+    void acceptVals();
 
 private:
     QLabel *nspLabel;
     QLabel *nrkLabel;
     QLabel *nreLabel;
     QLabel *speciesLabel;
+    QList <QCheckBox*> LSpeciesBoxList;
+    QStringList nsplStrList;
+    QCheckBox *LSpeciesBox;
     QPushButton *okButton;
     QPushButton *cancelButton;
 };
