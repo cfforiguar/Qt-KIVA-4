@@ -335,6 +335,7 @@ void DataWidget::setupTabs()
 
         QTreeView *TreeView = new QTreeView;
         TreeView->setModel(proxyModel);
+        TreeView->setItemDelegate(new UrlDelegate);
         for (int column = 0; column < proxyModel->columnCount(); ++column)
             TreeView->resizeColumnToContents(column);
         //COSA PARA ORGANIZAR: horizontalLayout_2->addWidget(tabDWidget);

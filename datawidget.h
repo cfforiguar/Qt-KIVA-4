@@ -6,6 +6,7 @@
 #include "addchemdialog.h"
 #include <QItemSelection>
 #include <QTabWidget>
+#include "urldelegate.h"
 
 QT_BEGIN_NAMESPACE
 class QSortFilterProxyModel;
