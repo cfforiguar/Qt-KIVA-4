@@ -294,6 +294,10 @@ void DataWidget::setupTabs()
     //Se crea el visor de tipo árbol y se le asocia el modelo
     QTreeView *TreeView = new QTreeView;
     TreeView->setModel(tree);
+    TreeView->setItemDelegateForColumn(0,new UrlDelegate);
+    TreeView->setAttribute(Qt::WA_Hover, true);
+    TreeView->setMouseTracking(true);
+    TreeView->setProperty("alternatingRowColors",1);
 
     //Se asigna el visor a una pestaña
     addTab(TreeView, "itape5");
@@ -335,7 +339,10 @@ void DataWidget::setupTabs()
 
         QTreeView *TreeView = new QTreeView;
         TreeView->setModel(proxyModel);
-        TreeView->setItemDelegate(new UrlDelegate);
+        TreeView->setItemDelegateForColumn(0,new UrlDelegate);
+        TreeView->setAttribute(Qt::WA_Hover, true);
+        TreeView->setMouseTracking(true);
+        TreeView->setProperty("alternatingRowColors",1);
         for (int column = 0; column < proxyModel->columnCount(); ++column)
             TreeView->resizeColumnToContents(column);
         //COSA PARA ORGANIZAR: horizontalLayout_2->addWidget(tabDWidget);

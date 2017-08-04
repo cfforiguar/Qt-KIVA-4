@@ -21,6 +21,7 @@ public:
     DataWidget(QWidget *parent = 0, const QString &fileName=":/default.txt");
     void printData(const TreeModel *model) const;
     TreeModel *returnTreeModel();
+    QTreeView *TreeView;
 
 public slots:
     void updateActions();
