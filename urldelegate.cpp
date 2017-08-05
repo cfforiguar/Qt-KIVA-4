@@ -36,3 +36,13 @@ QSize UrlDelegate::sizeHint(const QStyleOptionViewItem &option,
 }
 
 
+bool UrlDelegate::editorEvent(QEvent *event, QAbstractItemModel *model,
+                              const QStyleOptionViewItem &option, const QModelIndex &index)
+{
+
+    if (event->type()==QEvent::MouseButtonDblClick){
+        QDesktopServices::openUrl(QUrl("http://www.google.com", QUrl::TolerantMode));
+        return true;
+    }
+    return false;
+}
