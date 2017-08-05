@@ -63,40 +63,29 @@ MainWindow::MainWindow(QWidget *parent)
 {
     setupUi(this);
 
-    QStringList headers;
-    headers << tr("C1") << tr("C2") << tr("C3") << tr("C4")<< tr("C4")<< tr("C4")<< tr("C4");
-
-    QFile file(":/default.txt");
-    file.open(QIODevice::ReadOnly);
-    TreeModel *model = new TreeModel(headers, file.readAll());
-    file.close();
-
-    view->setModel(model);
+/*
     for (int column = 0; column < model->columnCount(); ++column)
         view->resizeColumnToContents(column);
+*/
 
     tabDWidget = new DataWidget(0,":/default.txt");
-    horizontalLayout_2->addWidget(tabDWidget);
+    setCentralWidget(tabDWidget);
 
     connect(exitAction, &QAction::triggered, qApp, &QCoreApplication::quit);
 
+/*
     connect(view->selectionModel(), &QItemSelectionModel::selectionChanged,
             this, &MainWindow::updateActions);
-
     connect(actionsMenu, &QMenu::aboutToShow, this, &MainWindow::updateActions);
     connect(insertRowAction, &QAction::triggered, this, &MainWindow::insertRow);
-    connect(insertColumnAction, &QAction::triggered, this, &MainWindow::insertColumn);
     connect(removeRowAction, &QAction::triggered, this, &MainWindow::removeRow);
-    connect(removeColumnAction, &QAction::triggered, this, &MainWindow::removeColumn);
-
-        connect(insertChildAction, &QAction::triggered, tabDWidget, &DataWidget::insertChild);
-        //***************
-        connect(addReacAction, &QAction::triggered, tabDWidget, &DataWidget::showAddManualMech);
-        //***************
+*/
+    connect(insertChildAction, &QAction::triggered, tabDWidget, &DataWidget::insertChild);
+    connect(addReacAction, &QAction::triggered, tabDWidget, &DataWidget::showAddManualMech);
 
     connect(addMechAction, &QAction::triggered, this, &MainWindow::addMech);
 
-    updateActions();
+    //updateActions();
 
     //model->printData(model);
 }
@@ -128,9 +117,9 @@ void MainWindow::addMech()
     QTest::qWait(3000);
 
     //Borrar el modelo y cargar uno nuevo desde el archivo modificado
-    horizontalLayout_2->removeWidget(tabDWidget);
+
     tabDWidget = new DataWidget(0,"itape5");
-    horizontalLayout_2->addWidget(tabDWidget);
+    setCentralWidget(tabDWidget);
 
 }
 
@@ -161,21 +150,8 @@ void MainWindow::insertChild()
 }
 */
 
-bool MainWindow::insertColumn()
-{
-    QAbstractItemModel *model = view->model();
-    int column = view->selectionModel()->currentIndex().column();
 
-    // Insert a column in the parent item.
-    bool changed = model->insertColumn(column + 1);
-    if (changed)
-        model->setHeaderData(column + 1, Qt::Horizontal, QVariant("[No header]"), Qt::EditRole);
-
-    updateActions();
-
-    return changed;
-}
-
+/*
 void MainWindow::insertRow()
 {
     QModelIndex index = view->selectionModel()->currentIndex();
@@ -190,20 +166,6 @@ void MainWindow::insertRow()
         QModelIndex child = model->index(index.row()+1, column, index.parent());
         model->setData(child, QVariant("[No data]"), Qt::EditRole);
     }
-}
-
-bool MainWindow::removeColumn()
-{
-    QAbstractItemModel *model = view->model();
-    int column = view->selectionModel()->currentIndex().column();
-
-    // Insert columns in each child of the parent item.
-    bool changed = model->removeColumn(column);
-
-    if (changed)
-        updateActions();
-
-    return changed;
 }
 
 void MainWindow::removeRow()
@@ -235,3 +197,4 @@ void MainWindow::updateActions()
             statusBar()->showMessage(tr("Position: (%1,%2) in top level").arg(row).arg(column));
     }
 }
+*/

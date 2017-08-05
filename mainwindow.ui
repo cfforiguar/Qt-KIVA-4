@@ -30,29 +30,6 @@
     <property name="bottomMargin">
      <number>0</number>
     </property>
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <item>
-       <widget class="QTreeView" name="view">
-        <property name="alternatingRowColors">
-         <bool>true</bool>
-        </property>
-        <property name="selectionBehavior">
-         <enum>QAbstractItemView::SelectItems</enum>
-        </property>
-        <property name="horizontalScrollMode">
-         <enum>QAbstractItemView::ScrollPerPixel</enum>
-        </property>
-        <property name="animated">
-         <bool>false</bool>
-        </property>
-        <property name="allColumnsShowFocus">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -74,11 +51,9 @@
     <property name="title">
      <string>&amp;Actions</string>
     </property>
-    <addaction name="insertRowAction"/>
     <addaction name="insertColumnAction"/>
     <addaction name="separator"/>
     <addaction name="removeRowAction"/>
-    <addaction name="removeColumnAction"/>
     <addaction name="separator"/>
     <addaction name="insertChildAction"/>
    </widget>

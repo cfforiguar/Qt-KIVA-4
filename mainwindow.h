@@ -72,14 +72,12 @@ public:
     MainWindow(QWidget *parent = 0);
 
 public slots:
-    void updateActions();
+//    void updateActions();
 
 private slots:
-    //void insertChild();
-    bool insertColumn();
-    void insertRow();
-    bool removeColumn();
-    void removeRow();
+    //void insertChild();    
+//    void insertRow();
+//    void removeRow();
     void addMech();
 private://test
     TreeProxyModel *proxyModel;//test
