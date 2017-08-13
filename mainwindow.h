@@ -79,6 +79,11 @@ private slots:
 //    void insertRow();
 //    void removeRow();
     void addMech();
+    void openFile();
+    void saveFile();
+    void runSalome();
+    void runConverter();
+    void Post2D();
 private://test
     TreeProxyModel *proxyModel;//test
     DataWidget *tabDWidget;

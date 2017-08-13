@@ -45,6 +45,8 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
+    <addaction name="openAction"/>
+    <addaction name="saveAction"/>
     <addaction name="exitAction"/>
    </widget>
    <widget class="QMenu" name="actionsMenu">
@@ -61,8 +63,18 @@
     <property name="title">
      <string>Asistentes</string>
     </property>
+    <widget class="QMenu" name="menuPostProcesar">
+     <property name="title">
+      <string>PostProcesar</string>
+     </property>
+     <addaction name="actionPost2D"/>
+     <addaction name="actionPost3D"/>
+    </widget>
     <addaction name="addMechAction"/>
     <addaction name="addReacAction"/>
+    <addaction name="meshAction"/>
+    <addaction name="convertMeshAction"/>
+    <addaction name="menuPostProcesar"/>
    </widget>
    <addaction name="fileMenu"/>
    <addaction name="actionsMenu"/>
@@ -125,6 +137,36 @@
   <action name="addReacAction">
    <property name="text">
     <string>Añadir reacciones</string>
+   </property>
+  </action>
+  <action name="openAction">
+   <property name="text">
+    <string>Abrir ...</string>
+   </property>
+  </action>
+  <action name="saveAction">
+   <property name="text">
+    <string>Guardar ...</string>
+   </property>
+  </action>
+  <action name="meshAction">
+   <property name="text">
+    <string>Crear malla</string>
+   </property>
+  </action>
+  <action name="convertMeshAction">
+   <property name="text">
+    <string>Convertir malla OpenFoam</string>
+   </property>
+  </action>
+  <action name="actionPost2D">
+   <property name="text">
+    <string>Postprocesado 2D</string>
+   </property>
+  </action>
+  <action name="actionPost3D">
+   <property name="text">
+    <string>Postprocesado 3D</string>
    </property>
   </action>
  </widget>

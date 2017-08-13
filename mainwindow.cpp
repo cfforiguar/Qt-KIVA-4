@@ -85,10 +85,121 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(addMechAction, &QAction::triggered, this, &MainWindow::addMech);
 
+    connect(openAction, &QAction::triggered, this, &MainWindow::openFile);
+    connect(saveAction, &QAction::triggered, this, &MainWindow::saveFile);
+    connect(meshAction, &QAction::triggered, this, &MainWindow::runSalome);
+    connect(convertMeshAction, &QAction::triggered, this, &MainWindow::runConverter);
+    connect(actionPost2D, &QAction::triggered, this, &MainWindow::Post2D);
+
+
     //updateActions();
 
     //model->printData(model);
 }
+
+void MainWindow::Post2D()
+{
+    QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
+                                          "/home",
+                                          QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+    
+    //Correr el script para modificar dicho archivo
+    QStringList list;
+    QProcess * exec;
+    exec =new QProcess(this);
+    list.clear();
+    list << "PATH=/opt:/opt/p:/bin:export"
+         << "LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib/boost:/usr/local/include/boost:/usr/lib:/home/carlos/opt/sundials-intel/include:/home/carlos/opt/sundials-intel/lib:$LD_LIBRARY_PATH"
+         << "source /home/carlos/.local/bin/setup_cantera"
+         << "source /opt/intel/bin/compilervars.sh intel64";
+    exec->setEnvironment(list);
+    exec->startDetached("./Post2D.py",  QStringList() << dir << " ",dir);
+    exec->waitForStarted(-1);
+    exec->waitForFinished(-1);
+    //exec->write ("exit\n\r");
+    exec->close();
+
+//FIXME: Tocó introducir este delay para que el S.O. tenga tiempo de escriir el archivo
+    //Acá una referencia de cómo se podría atacar el problema: https://forum.qt.io/topic/71328/qprocess-startdetached-can-open-the-exe-but-start-cannot/14
+    QTest::qWait(3000);
+    
+}
+void MainWindow::openFile()
+{
+    QString fileName = QFileDialog::getOpenFileName(this);
+    if (!fileName.isEmpty()){
+        tabDWidget = new DataWidget(0,fileName);
+        setCentralWidget(tabDWidget);
+    }
+}
+void MainWindow::saveFile()
+{
+    TreeModel *TreeMdl = tabDWidget->returnTreeModel();
+    QString fileName = QFileDialog::getSaveFileName(this);
+    if (!fileName.isEmpty())
+        tabDWidget->printData(TreeMdl,fileName);
+}
+
+void MainWindow::runSalome()
+{
+    //Correr el script para modificar dicho archivo
+    QStringList list;
+    QProcess * exec;
+    exec =new QProcess(this);
+    list.clear();
+    list << "PATH=/opt:/opt/p:/bin:export";
+    exec->setEnvironment(list);
+    exec->startDetached("./salome.sh");
+    exec->waitForStarted(-1);
+    exec->waitForFinished(-1);
+    exec->write ("exit\n\r");
+    exec->close();
+}
+
+
+void MainWindow::runConverter()
+{
+    //FIXME: por alguna razón no carga el entorno de OpenFOAM
+    //          El script corre bien por fuera, pero no hubo forma de cuadrar el entorno
+    //          para que funcionara
+
+    QMessageBox messageBox;
+    messageBox.critical(0,tr("Error"),tr("Función aún no disponible"));
+    messageBox.setFixedSize(500,200);
+    return;
+
+
+/*
+    QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
+                                          "/home",
+                                          QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+    QStringList list;
+    QProcess * exec;
+    exec =new QProcess(this);
+    list.clear();
+    exec->setProcessChannelMode(QProcess::MergedChannels);
+    list << "PATH=/opt:/opt/p:/usr/bin:/bin:export"
+         << "LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib/boost:/usr/local/include/boost:/usr/lib:/home/carlos/opt/sundials-intel/include:/home/carlos/opt/sundials-intel/lib:$LD_LIBRARY_PATH"
+            ;
+    exec->setEnvironment(list);
+    //exec->start(QString("echo"), QStringList(" ebrio"));
+    //exec->start(QString("pwd"));
+    exec->start(QString("./ebrio.sh "));//,QStringList(dir));
+//    exec->start("bash", QStringList() << "-c" << "echo $USER");
+    //exec->start(QString("foamToKIVA4Mesh"));
+    //exec->start(QString("pwd"));
+    //QTest::qWait(3000);
+    exec->waitForStarted(-1);
+    exec->waitForFinished(-1);
+    exec->write ("exit\n\r");
+    QString p_stdout = exec->readAllStandardOutput();
+    QString p_stderr = exec->readAllStandardError();
+    exec->close();
+*/
+//FIXME: Tocó introducir este delay para que el S.O. tenga tiempo de escriir el archivo
+    //Acá una referencia de cómo se podría atacar el problema: https://forum.qt.io/topic/71328/qprocess-startdetached-can-open-the-exe-but-start-cannot/14
+}
+
 
 void MainWindow::addMech()
 {

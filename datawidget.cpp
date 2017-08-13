@@ -371,9 +371,8 @@ TreeModel *DataWidget::returnTreeModel()
     return tree;
 }
 
-void DataWidget::printData(const TreeModel *model) const
+void DataWidget::printData(const TreeModel *model,const QString fileName) const
 {
-    QString fileName = "itape5";
     QFile file1(fileName);
     file1.open(QIODevice::ReadWrite);
     QTextStream out(&file1);

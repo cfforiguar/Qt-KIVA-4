@@ -19,7 +19,7 @@ class DataWidget : public QTabWidget
 
 public:
     DataWidget(QWidget *parent = 0, const QString &fileName=":/default.txt");
-    void printData(const TreeModel *model) const;
+    void printData(const TreeModel *model,const QString fileName="itape5") const;
     TreeModel *returnTreeModel();
     QTreeView *TreeView;
 
