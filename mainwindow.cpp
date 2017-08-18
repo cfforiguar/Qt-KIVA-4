@@ -99,30 +99,46 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::Post2D()
 {
+
     QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
                                           "/home",
                                           QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-    
-    //Correr el script para modificar dicho archivo
+
+    //QString dir="/home/carlos/archivos/Mallador/Repositorios/conversores/grid3-MechConverge";
+
+    QString dst = dir+"/Post2D.py";
+
+    if (QFile::exists(dst))
+    {
+        QFile::remove(dst);
+    }
+    QFile::copy(QDir::currentPath()+"/Post2D.py", dst);
+
     QStringList list;
     QProcess * exec;
     exec =new QProcess(this);
     list.clear();
-    list << "PATH=/opt:/opt/p:/bin:export"
+    list << "PATH=/home/carlos/archivos/Mallador/Repositorios/conversores"
          << "LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib/boost:/usr/local/include/boost:/usr/lib:/home/carlos/opt/sundials-intel/include:/home/carlos/opt/sundials-intel/lib:$LD_LIBRARY_PATH"
          << "source /home/carlos/.local/bin/setup_cantera"
          << "source /opt/intel/bin/compilervars.sh intel64";
     exec->setEnvironment(list);
-    exec->startDetached("./Post2D.py",  QStringList() << dir << " ",dir);
+    QStringList Args;
+    //Args<< dir << " ";
+    Args << dir;
+    exec->setProcessChannelMode(QProcess::MergedChannels);
+    exec->startDetached(dst, Args,dir);
     exec->waitForStarted(-1);
     exec->waitForFinished(-1);
     //exec->write ("exit\n\r");
-    exec->close();
-
-//FIXME: Tocó introducir este delay para que el S.O. tenga tiempo de escriir el archivo
+    exec->waitForReadyRead();
+    //QString p_stdout = exec->readAllStandardOutput();//Falla si se usa un enlace simbólico
+    //QString p_stderr = exec->readAllStandardError();//Falla si se usa un enlace simbólico
+    //FIXME: Tocó introducir este delay para que el S.O. tenga tiempo de escriir el archivo
     //Acá una referencia de cómo se podría atacar el problema: https://forum.qt.io/topic/71328/qprocess-startdetached-can-open-the-exe-but-start-cannot/14
     QTest::qWait(3000);
-    
+    exec->close();
+    QFile::remove(dir+"/Post2D.py");
 }
 void MainWindow::openFile()
 {
