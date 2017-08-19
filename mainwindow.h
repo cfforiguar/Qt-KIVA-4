@@ -84,6 +84,7 @@ private slots:
     void runSalome();
     void runConverter();
     void Post2D();
+    void Post3D();
 private://test
     TreeProxyModel *proxyModel;//test
     DataWidget *tabDWidget;

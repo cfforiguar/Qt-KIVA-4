@@ -57,6 +57,7 @@
 #include <QProcess>
 
 #include <QFile>
+#include <QDir>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -90,11 +91,62 @@ MainWindow::MainWindow(QWidget *parent)
     connect(meshAction, &QAction::triggered, this, &MainWindow::runSalome);
     connect(convertMeshAction, &QAction::triggered, this, &MainWindow::runConverter);
     connect(actionPost2D, &QAction::triggered, this, &MainWindow::Post2D);
+    connect(actionPost3D, &QAction::triggered, this, &MainWindow::Post3D);
 
 
     //updateActions();
 
     //model->printData(model);
+}
+
+void MainWindow::Post3D()
+{
+
+    QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
+                                          "/home",
+                                          QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+
+    //QString dir="/home/carlos/archivos/Mallador/Repositorios/conversores/Test Folder";
+    QString dst = dir+"/ConvRes-Paraview.py";
+    QString finFolderName=dir+"/TERMINADO";
+    QDir finFolder = QDir(finFolderName);
+
+    if (QFile::exists(dst))
+    {
+        QFile::remove(dst);
+    }
+    bool test = QFile::copy(QDir::currentPath()+"/tmp3DPostproc/ConvRes-Paraview.py", dst);
+
+    QStringList list;
+    QProcess * exec;
+    exec =new QProcess(this);
+    list.clear();
+    list << "PATH=/home/carlos/archivos/Mallador/Repositorios/conversores"
+         << "LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib/boost:/usr/local/include/boost:/usr/lib:/home/carlos/opt/sundials-intel/include:/home/carlos/opt/sundials-intel/lib:$LD_LIBRARY_PATH"
+         << "source /home/carlos/.local/bin/setup_cantera"
+         << "source /opt/intel/bin/compilervars.sh intel64";
+    exec->setEnvironment(list);
+    QStringList Args;
+    //Args<< dir << " ";
+    Args << dir;
+    exec->setProcessChannelMode(QProcess::MergedChannels);
+    finFolder.rmdir(finFolderName);
+    exec->startDetached(dst, Args,dir);
+    while (!QDir(dir+"/TERMINADO").exists())
+    {
+        QTest::qWait(1000);
+    }
+    exec->waitForStarted(-1);
+    exec->waitForFinished(-1);
+    //exec->write ("exit\n\r");
+    exec->waitForReadyRead();
+    //QString p_stdout = exec->readAllStandardOutput();//Falla si se usa un enlace simbólico
+    //QString p_stderr = exec->readAllStandardError();//Falla si se usa un enlace simbólico
+    //FIXME: Tocó introducir este delay para que el S.O. tenga tiempo de escriir el archivo
+    //Acá una referencia de cómo se podría atacar el problema: https://forum.qt.io/topic/71328/qprocess-startdetached-can-open-the-exe-but-start-cannot/14
+    exec->close();
+    QFile::remove(dst);
+    finFolder.rmdir(finFolderName);
 }
 
 void MainWindow::Post2D()
