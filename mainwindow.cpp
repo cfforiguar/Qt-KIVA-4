@@ -58,6 +58,7 @@
 
 #include <QFile>
 #include <QDir>
+#include <QInputDialog>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -68,6 +69,10 @@ MainWindow::MainWindow(QWidget *parent)
     for (int column = 0; column < model->columnCount(); ++column)
         view->resizeColumnToContents(column);
 */
+
+    WorkDir = QFileDialog::getExistingDirectory(this, tr("Abrir directorio de trabajo"),
+                                          "/home",
+                                          QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 
     tabDWidget = new DataWidget(0,":/default.txt");
     setCentralWidget(tabDWidget);
@@ -92,6 +97,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(convertMeshAction, &QAction::triggered, this, &MainWindow::runConverter);
     connect(actionPost2D, &QAction::triggered, this, &MainWindow::Post2D);
     connect(actionPost3D, &QAction::triggered, this, &MainWindow::Post3D);
+    connect(actionProc, &QAction::triggered, this, &MainWindow::Proc);
+    connect(actionCalcRC, &QAction::triggered, this, &MainWindow::CalcRC);
 
 
     //updateActions();
@@ -99,11 +106,105 @@ MainWindow::MainWindow(QWidget *parent)
     //model->printData(model);
 }
 
+void MainWindow::CalcRC()
+{
+    QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
+                                          WorkDir,
+                                          QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+
+    //QString dir="/home/carlos/archivos/Mallador/Repositorios/conversores/grid3-MechConverge";
+
+    QString dst = dir+"/CalcRC.py";
+
+    if (QFile::exists(dst))
+    {
+        QFile::remove(dst);
+    }
+    QFile::copy(QDir::currentPath()+"/CalcRC.py", dst);
+    QStringList list;
+    QProcess * exec;
+    exec =new QProcess(this);
+    list.clear();
+    list << "PATH=/home/carlos/archivos/Mallador/Repositorios/conversores"
+         << "LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib/boost:/usr/local/include/boost:/usr/lib:/home/carlos/opt/sundials-intel/include:/home/carlos/opt/sundials-intel/lib:$LD_LIBRARY_PATH"
+         << "source /home/carlos/.local/bin/setup_cantera"
+         << "source /opt/intel/bin/compilervars.sh intel64";
+    exec->setEnvironment(list);
+    QStringList Args;
+    //Args<< dir << " ";
+    Args << "";
+    exec->setProcessChannelMode(QProcess::MergedChannels);
+    exec->startDetached(dst, Args,dir);
+    exec->waitForStarted(-1);
+    exec->waitForFinished(-1);
+    //exec->write ("exit\n\r");
+    exec->waitForReadyRead();
+    //QString p_stdout = exec->readAllStandardOutput();//Falla si se usa un enlace simbólico
+    //QString p_stderr = exec->readAllStandardError();//Falla si se usa un enlace simbólico
+    //FIXME: Tocó introducir este delay para que el S.O. tenga tiempo de escriir el archivo
+    //Acá una referencia de cómo se podría atacar el problema: https://forum.qt.io/topic/71328/qprocess-startdetached-can-open-the-exe-but-start-cannot/14
+    QTest::qWait(3000);
+    exec->close();
+    QFile::remove(dir+"/CalcRC.py");
+}
+
+void MainWindow::Proc()
+{
+
+    QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
+                                          WorkDir,
+                                          QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+
+    //QString dir="/home/carlos/Descargas/TMP/Test Folder";//No usar la misma carpeta donde están los scripts por que los borra
+    QString scrName="RunKiva.py";
+    QString src=QDir::currentPath()+"/"+scrName;
+    QString dst = dir+"/"+scrName;
+    QString finFolderName=dir+"/TERMINADO"+scrName;
+    QDir finFolder = QDir(finFolderName);
+
+    if (QFile::exists(dst))
+    {
+        QFile::remove(dst);
+    }
+    bool test = QFile::copy(src, dst);
+
+    QStringList list;
+    QProcess * exec;
+    exec =new QProcess(this);
+    list.clear();
+    list << "PATH=/home/carlos/archivos/Mallador/Repositorios/conversores"
+         << "LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib/boost:/usr/local/include/boost:/usr/lib:/home/carlos/opt/sundials-intel/include:/home/carlos/opt/sundials-intel/lib:$LD_LIBRARY_PATH"
+         << "source /home/carlos/.local/bin/setup_cantera"
+         << "source /opt/intel/bin/compilervars.sh intel64";
+    exec->setEnvironment(list);
+    QStringList Args;
+    //Args<< dir << " ";
+    Args << "";
+    exec->setProcessChannelMode(QProcess::MergedChannels);
+    finFolder.rmdir(finFolderName);
+    exec->startDetached(dst, Args,dir);
+    while (!QDir(finFolderName).exists())
+    {
+        QTest::qWait(1000);
+    }
+    exec->waitForStarted(-1);
+    exec->waitForFinished(-1);
+    //exec->write ("exit\n\r");
+    exec->waitForReadyRead();
+    //QString p_stdout = exec->readAllStandardOutput();//Falla si se usa un enlace simbólico
+    //QString p_stderr = exec->readAllStandardError();//Falla si se usa un enlace simbólico
+    //FIXME: Tocó introducir este delay para que el S.O. tenga tiempo de escriir el archivo
+    //Acá una referencia de cómo se podría atacar el problema: https://forum.qt.io/topic/71328/qprocess-startdetached-can-open-the-exe-but-start-cannot/14
+    exec->close();
+    QFile::remove(dst);
+    finFolder.rmdir(finFolderName);
+}
+
 void MainWindow::Post3D()
 {
 
     QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
-                                          "/home",
+                                          WorkDir,
                                           QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 
     //QString dir="/home/carlos/archivos/Mallador/Repositorios/conversores/Test Folder";
@@ -153,7 +254,7 @@ void MainWindow::Post2D()
 {
 
     QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
-                                          "/home",
+                                          WorkDir,
                                           QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 
     //QString dir="/home/carlos/archivos/Mallador/Repositorios/conversores/grid3-MechConverge";
@@ -165,7 +266,6 @@ void MainWindow::Post2D()
         QFile::remove(dst);
     }
     QFile::copy(QDir::currentPath()+"/Post2D.py", dst);
-
     QStringList list;
     QProcess * exec;
     exec =new QProcess(this);
@@ -234,6 +334,11 @@ void MainWindow::runConverter()
     QMessageBox messageBox;
     messageBox.critical(0,tr("Error"),tr("Función aún no disponible"));
     messageBox.setFixedSize(500,200);
+
+    bool ok;
+    QInputDialog::getMultiLineText(this, tr("QInputDialog::getMultiLineText()"),
+                                                      tr("Address:"), "John Doe\nFreedom Street", &ok);
+
     return;
 
 
@@ -275,6 +380,14 @@ void MainWindow::addMech()
     TreeModel *TreeMdl = tabDWidget->returnTreeModel();
     tabDWidget->printData(TreeMdl);
 
+    QString dir = WorkDir;
+    QString dst = dir+"/test.sh";
+    if (QFile::exists(dst))
+    {
+        QFile::remove(dst);
+    }
+    QFile::copy(QDir::currentPath()+"/test.sh", dst);
+
     //Correr el script para modificar dicho archivo
     QStringList list;
     QProcess * exec;
@@ -282,13 +395,14 @@ void MainWindow::addMech()
     list.clear();
     list << "PATH=/opt:/opt/p:/bin:export"
          << "LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib/boost:/usr/local/include/boost:/usr/lib:/home/carlos/opt/sundials-intel/include:/home/carlos/opt/sundials-intel/lib:$LD_LIBRARY_PATH"
-         << "source /home/carlos/.local/bin/setup_cantera"
-         << "source /opt/intel/bin/compilervars.sh intel64";
+         ;
     exec->setEnvironment(list);
-    exec->startDetached("./test.sh");
+    QStringList Args;
+    //Args<< dir << " ";
+    Args << "";
+    exec->startDetached(dst, Args,dir);
     exec->waitForStarted(-1);
     exec->waitForFinished(-1);
-    exec->write ("exit\n\r");
     exec->close();
 
 //FIXME: Tocó introducir este delay para que el S.O. tenga tiempo de escriir el archivo
@@ -299,7 +413,7 @@ void MainWindow::addMech()
 
     tabDWidget = new DataWidget(0,"itape5");
     setCentralWidget(tabDWidget);
-
+    QFile::remove(dir+"/test.sh");
 }
 
 /*

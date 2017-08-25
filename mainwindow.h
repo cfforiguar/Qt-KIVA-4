@@ -60,6 +60,7 @@
 #include <QModelIndex>
 
 
+
 QT_BEGIN_NAMESPACE
 class QSortFilterProxyModel;
 QT_END_NAMESPACE
@@ -85,9 +86,12 @@ private slots:
     void runConverter();
     void Post2D();
     void Post3D();
+    void Proc();
+    void CalcRC();
 private://test
     TreeProxyModel *proxyModel;//test
     DataWidget *tabDWidget;
+    QString WorkDir;
 
 };
 

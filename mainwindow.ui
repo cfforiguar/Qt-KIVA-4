@@ -75,6 +75,8 @@
     <addaction name="meshAction"/>
     <addaction name="convertMeshAction"/>
     <addaction name="menuPostProcesar"/>
+    <addaction name="actionProc"/>
+    <addaction name="actionCalcRC"/>
    </widget>
    <addaction name="fileMenu"/>
    <addaction name="actionsMenu"/>
@@ -167,6 +169,16 @@
   <action name="actionPost3D">
    <property name="text">
     <string>Postprocesado 3D</string>
+   </property>
+  </action>
+  <action name="actionProc">
+   <property name="text">
+    <string>Procesar</string>
+   </property>
+  </action>
+  <action name="actionCalcRC">
+   <property name="text">
+    <string>Calcular Rel. de Compresión</string>
    </property>
   </action>
  </widget>
