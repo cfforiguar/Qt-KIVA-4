@@ -332,45 +332,26 @@ void MainWindow::runConverter()
     //          para que funcionara
 
     QMessageBox messageBox;
-    messageBox.critical(0,tr("Error"),tr("Función aún no disponible"));
+    messageBox.critical(0,tr("Error"),tr("Función aún no disponible desde la GUI"));
     messageBox.setFixedSize(500,200);
 
-    bool ok;
-    QInputDialog::getMultiLineText(this, tr("QInputDialog::getMultiLineText()"),
-                                                      tr("Address:"), "John Doe\nFreedom Street", &ok);
-
-    return;
-
-
-/*
-    QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
-                                          "/home",
+    QString dir = QFileDialog::getExistingDirectory(this, tr("Abrir carpeta"),
+                                          WorkDir,
                                           QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-    QStringList list;
-    QProcess * exec;
-    exec =new QProcess(this);
-    list.clear();
-    exec->setProcessChannelMode(QProcess::MergedChannels);
-    list << "PATH=/opt:/opt/p:/usr/bin:/bin:export"
-         << "LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib/boost:/usr/local/include/boost:/usr/lib:/home/carlos/opt/sundials-intel/include:/home/carlos/opt/sundials-intel/lib:$LD_LIBRARY_PATH"
-            ;
-    exec->setEnvironment(list);
-    //exec->start(QString("echo"), QStringList(" ebrio"));
-    //exec->start(QString("pwd"));
-    exec->start(QString("./ebrio.sh "));//,QStringList(dir));
-//    exec->start("bash", QStringList() << "-c" << "echo $USER");
-    //exec->start(QString("foamToKIVA4Mesh"));
-    //exec->start(QString("pwd"));
-    //QTest::qWait(3000);
-    exec->waitForStarted(-1);
-    exec->waitForFinished(-1);
-    exec->write ("exit\n\r");
-    QString p_stdout = exec->readAllStandardOutput();
-    QString p_stderr = exec->readAllStandardError();
-    exec->close();
-*/
-//FIXME: Tocó introducir este delay para que el S.O. tenga tiempo de escriir el archivo
-    //Acá una referencia de cómo se podría atacar el problema: https://forum.qt.io/topic/71328/qprocess-startdetached-can-open-the-exe-but-start-cannot/14
+    QString scrName="ebrio.sh";
+    QString src=QDir::currentPath()+"/"+scrName;
+    QString dst = dir+"/"+scrName;
+
+    bool ok;
+    QInputDialog::getMultiLineText(this, tr("Comando a ejecutar"),
+                                     tr("Pegue y ejecute en la consola"),
+                                      "cd \""+dir+"\"\n"
+                                      +"cp \""+src+"\""+" $(pwd) \n"
+                                      +"./"+scrName+"\n"
+                                      +"rm "+scrName+"\n"
+                                      +"",
+                                      Q_NULLPTR);
+    return;
 }
 
 
