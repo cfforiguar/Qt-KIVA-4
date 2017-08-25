@@ -303,7 +303,7 @@ void MainWindow::openFile()
 void MainWindow::saveFile()
 {
     TreeModel *TreeMdl = tabDWidget->returnTreeModel();
-    QString fileName = QFileDialog::getSaveFileName(this);
+    QString fileName = QFileDialog::getSaveFileName(this,tr("Guardar como..."),WorkDir);
     if (!fileName.isEmpty())
         tabDWidget->printData(TreeMdl,fileName);
 }
@@ -351,50 +351,46 @@ void MainWindow::runConverter()
                                       +"rm "+scrName+"\n"
                                       +"",
                                       Q_NULLPTR);
-    return;
 }
 
 
 void MainWindow::addMech()
 {
     //Salvar el estado actual del modelo en un archivo
+    QString tmpFile=WorkDir+"/itape5";
     TreeModel *TreeMdl = tabDWidget->returnTreeModel();
-    tabDWidget->printData(TreeMdl);
+    tabDWidget->printData(TreeMdl,tmpFile);
 
-    QString dir = WorkDir;
-    QString dst = dir+"/test.sh";
-    if (QFile::exists(dst))
-    {
-        QFile::remove(dst);
-    }
-    QFile::copy(QDir::currentPath()+"/test.sh", dst);
+    QMessageBox messageBox;
+    messageBox.critical(0,tr("Error"),tr("Función aún no disponible desde la GUI"));
+    messageBox.setFixedSize(500,200);
 
-    //Correr el script para modificar dicho archivo
-    QStringList list;
-    QProcess * exec;
-    exec =new QProcess(this);
-    list.clear();
-    list << "PATH=/opt:/opt/p:/bin:export"
-         << "LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib/boost:/usr/local/include/boost:/usr/lib:/home/carlos/opt/sundials-intel/include:/home/carlos/opt/sundials-intel/lib:$LD_LIBRARY_PATH"
-         ;
-    exec->setEnvironment(list);
-    QStringList Args;
-    //Args<< dir << " ";
-    Args << "";
-    exec->startDetached(dst, Args,dir);
-    exec->waitForStarted(-1);
-    exec->waitForFinished(-1);
-    exec->close();
+    QString dir = QFileDialog::getExistingDirectory(this, tr("Abrir carpeta"),
+                                          WorkDir,
+                                          QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+    QString scrName="test.sh";
+    QString src=QDir::currentPath()+"/"+scrName;
+    QString dst = dir+"/"+scrName;
 
-//FIXME: Tocó introducir este delay para que el S.O. tenga tiempo de escriir el archivo
-    //Acá una referencia de cómo se podría atacar el problema: https://forum.qt.io/topic/71328/qprocess-startdetached-can-open-the-exe-but-start-cannot/14
-    QTest::qWait(3000);
-
+    bool ok=false;
+    QInputDialog::getMultiLineText(this, tr("Comando a ejecutar"),
+                                     tr("Pegue y ejecute en la consola"),
+                                      "cd \""+dir+"\"\n"
+                                      +"cp \""+src+"\""+" $(pwd) \n"
+                                      +"./"+scrName+"\n"
+                                      +"rm "+scrName+"\n"
+                                      +"",
+                                      &ok);
     //Borrar el modelo y cargar uno nuevo desde el archivo modificado
 
-    tabDWidget = new DataWidget(0,"itape5");
-    setCentralWidget(tabDWidget);
-    QFile::remove(dir+"/test.sh");
+    if (ok){
+        //FIXME: Tocó introducir este delay para que el S.O. tenga tiempo de escriir el archivo
+            //Acá una referencia de cómo se podría atacar el problema: https://forum.qt.io/topic/71328/qprocess-startdetached-can-open-the-exe-but-start-cannot/14
+        QTest::qWait(3000);
+        tabDWidget = new DataWidget(0,tmpFile);
+        setCentralWidget(tabDWidget);
+    }
+
 }
 
 /*
