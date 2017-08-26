@@ -43,7 +43,18 @@ bool UrlDelegate::editorEvent(QEvent *event, QAbstractItemModel *model,
 
     if (event->type()==QEvent::MouseButtonDblClick){
         QString HesselTerm= index.data(Qt::DisplayRole).toString();
-        QDesktopServices::openUrl(QUrl(listLinks.at(listKwords.indexOf(HesselTerm)), QUrl::TolerantMode));
+        int htmlIndex=listKwords.indexOf(HesselTerm);
+        if (htmlIndex==-1)
+        {
+            QMessageBox messageBox;
+            messageBox.critical(0,tr("Error"),tr("Término exacto no encontrado"));
+            messageBox.setFixedSize(500,200);
+            return true;
+        }
+        else
+        {
+            QDesktopServices::openUrl(QUrl(listLinks.at(htmlIndex), QUrl::TolerantMode));
+        }
         return true;
     }
     return false;

@@ -4,6 +4,7 @@
 #include <QAbstractItemDelegate>
 #include <QtWidgets>
 #include <QList>
+#include <QMessageBox>
 //Pinta, genera y abre las URL de las palabras clave de KIVA
 //Basado en los ejemplos "spinboxdelegate" y "stardelegate"
 // y basado en  https://stackoverflow.com/questions/2375763/how-to-open-an-url-in-a-qtableview
