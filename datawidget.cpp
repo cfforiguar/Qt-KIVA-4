@@ -179,6 +179,7 @@ void DataWidget::matchClearChilds(QString keyword, QAbstractItemModel *model,QMo
     index=indexList[0];
     model->removeRows(0,model->rowCount(index),index);
 }
+
 void DataWidget::showAddManualMech()
 {
     AddChemDialog aDialog;
@@ -354,11 +355,9 @@ void DataWidget::setupTabs()
 
 //        tableView->setSortingEnabled(true);
 
-
         connect(TreeView->selectionModel(),
             &QItemSelectionModel::selectionChanged,
             this, &DataWidget::selectionChanged);
-
 
         addTab(TreeView, str);
     }
@@ -371,8 +370,9 @@ TreeModel *DataWidget::returnTreeModel()
     return tree;
 }
 
-void DataWidget::printData(const TreeModel *model,const QString fileName) const
+void DataWidget::printData(const TreeModel *model, const QString fileName) const
 {
+
     QFile file1(fileName);
     file1.open(QIODevice::ReadWrite);
     QTextStream out(&file1);
@@ -391,43 +391,97 @@ void DataWidget::printData(const TreeModel *model,const QString fileName) const
 
     int nRows = model->rowCount();
     int nCols = model->columnCount();
-    int CurrRow =0;
-    int CurrCol =0;
+    int CurrRow = 0;
+    int CurrCol = 0;
     int ParentRow = 0;
 
-    while (CurrRow < nRows){
-        while (CurrCol < nCols){
-            CurrId= model->index(CurrRow,CurrCol,IdParents.last());
-            ItemData = model->data(CurrId,Qt::DisplayRole);
-            strHolder=ItemData.toString();
-            if (!strHolder.isEmpty()){
-                out << strHolder << "\t";
-            }
-            CurrCol = CurrCol+1;
-        }
-        out << "\n";
-        CurrRow = CurrRow+1;
-        CurrCol = 0;
+    //Encuentre el id de nsp y nspl para imprimirlo de forma especial
+    QString parentWord = QString("nsp");
+    QModelIndexList indexList=model->match(CurrId, Qt::DisplayRole, QVariant(parentWord), 1, Qt::MatchExactly);
+    QModelIndex nspIndex=indexList[0];
+    ItemData = model->data(nspIndex,Qt::DisplayRole);
+    int nspl=model->index(nspIndex.row(), 2, nspIndex.parent()).data().toInt();
 
-        int CurrIdRows = model->rowCount(CurrId);
-        //Si la fila actual tiene hijos:
-        if (CurrIdRows>0 && IdParents.last()!=CurrId){
-            //  agréguela a la lista de padres
-            IdParents << model->index(CurrRow-1,0,IdParents.last());
-            //Reinicie los valores de forma acorde a los nuevos hijos
-            ParentRow=CurrRow-1;
-            nRows=model->rowCount(IdParents.last());
-            nCols=model->columnCount(IdParents.last());
-            CurrRow=0;
+
+
+    while (CurrRow < nRows)
+    {
+        if (IdParents.last() == nspIndex)
+        {//Imprime las especies en nsp y nspl en el formato especial requerido por KIVA
+            for (int i = 0; i < nspl; ++i){
+                out  << QString("        "+
+                                model->data(model->index(i,0,nspIndex),Qt::DisplayRole).toString())
+                                .right(8)
+                     << QString("%1").arg(
+                                model->data(model->index(i,1,nspIndex),Qt::DisplayRole)
+                                .toDouble(),10,'f',5)
+                      << QString("%1").arg(
+                                model->data(model->index(i,2,nspIndex),Qt::DisplayRole)
+                                .toDouble(),10,'f',5);
+                out << "\n";
+            }
+
+            for (int i = nspl; i < model->rowCount(indexList[0]); ++i){
+                out << QString("        "+
+                               model->data(model->index(i,0,nspIndex),Qt::DisplayRole).toString())
+                               .right(8)+"  "
+                    << QString( model->data(model->index(i,1,nspIndex),Qt::DisplayRole).toString()+"        ")
+                                .left(6)
+                    << QString("%1").arg(
+                                model->data(model->index(i,2,nspIndex),Qt::DisplayRole)
+                                .toDouble(),10,'f',5)
+                    << QString( model->data(model->index(i,3,nspIndex),Qt::DisplayRole).toString()+"        ")
+                                .left(6)
+                    << QString("%1").arg(
+                                model->data(model->index(i,4,nspIndex),Qt::DisplayRole)
+                                .toDouble(),10,'f',5);
+                out << "\n";
+            }
+            indexList=model->match(model->index(0,0), Qt::DisplayRole,
+                                    QVariant(QString("stoifuel")), 1, Qt::MatchExactly);
+            CurrId=indexList[0];
+            CurrRow = nRows;
+            CurrCol = 0;
+        }
+        else
+        {
+            while (CurrCol < nCols)
+            {
+                CurrId= model->index(CurrRow,CurrCol,IdParents.last());
+                ItemData = model->data(CurrId,Qt::DisplayRole);
+                strHolder=ItemData.toString();
+                if (!strHolder.isEmpty())
+                {
+                    out << strHolder << "\t";
+                }
+                CurrCol = CurrCol+1;
+            }
+            out << "\n";
+            CurrRow = CurrRow+1;
+            CurrCol = 0;
+        }
+
+            int CurrIdRows = model->rowCount(CurrId);
+            //Si la fila actual tiene hijos:
+            if (CurrIdRows>0 && IdParents.last()!=CurrId)
+            {
+                //  agréguela a la lista de padres
+                IdParents << model->index(CurrRow-1,0,IdParents.last());
+                //Reinicie los valores de forma acorde a los nuevos hijos
+                ParentRow=CurrRow-1;
+                nRows=model->rowCount(IdParents.last());
+                nCols=model->columnCount(IdParents.last());
+                CurrRow=0;
             }
         //Si ya impirmió el último hijo, retome desde el padre anterior + 1
-        if (CurrRow == nRows && IdParents.last()!=IdParents[0]){
+        if (CurrRow == nRows && IdParents.last()!=IdParents[0])
+        {
             IdParents.pop_back();
             CurrId=IdParents.last();
             nRows=model->rowCount(CurrId);
             nCols=model->columnCount(CurrId);
             CurrRow=ParentRow+1;
-            }
+         }
     }
     file1.close();
 }

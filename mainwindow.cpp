@@ -120,7 +120,7 @@ void MainWindow::CalcRC()
     {
         QFile::remove(dst);
     }
-    QFile::copy(QDir::currentPath()+"/CalcRC.py", dst);
+    QFile::copy(QDir::currentPath()+"/scripts/CalcRC.py", dst);
     QStringList list;
     QProcess * exec;
     exec =new QProcess(this);
@@ -145,7 +145,7 @@ void MainWindow::CalcRC()
     //Acá una referencia de cómo se podría atacar el problema: https://forum.qt.io/topic/71328/qprocess-startdetached-can-open-the-exe-but-start-cannot/14
     QTest::qWait(3000);
     exec->close();
-    QFile::remove(dir+"/CalcRC.py");
+    QFile::remove(dir+"dst");
 }
 
 void MainWindow::Proc()
@@ -157,7 +157,7 @@ void MainWindow::Proc()
 
     //QString dir="/home/carlos/Descargas/TMP/Test Folder";//No usar la misma carpeta donde están los scripts por que los borra
     QString scrName="RunKiva.py";
-    QString src=QDir::currentPath()+"/"+scrName;
+    QString src=QDir::currentPath()+"/scripts/"+scrName;
     QString dst = dir+"/"+scrName;
     QString finFolderName=dir+"/TERMINADO"+scrName;
     QDir finFolder = QDir(finFolderName);
@@ -216,7 +216,7 @@ void MainWindow::Post3D()
     {
         QFile::remove(dst);
     }
-    bool test = QFile::copy(QDir::currentPath()+"/tmp3DPostproc/ConvRes-Paraview.py", dst);
+    bool test = QFile::copy(QDir::currentPath()+"/scripts/ConvRes-Paraview.py", dst);
 
     QStringList list;
     QProcess * exec;
@@ -265,7 +265,7 @@ void MainWindow::Post2D()
     {
         QFile::remove(dst);
     }
-    QFile::copy(QDir::currentPath()+"/Post2D.py", dst);
+    QFile::copy(QDir::currentPath()+"/scripts/Post2D.py", dst);
     QStringList list;
     QProcess * exec;
     exec =new QProcess(this);
@@ -338,8 +338,8 @@ void MainWindow::runConverter()
     QString dir = QFileDialog::getExistingDirectory(this, tr("Abrir carpeta"),
                                           WorkDir,
                                           QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-    QString scrName="ebrio.sh";
-    QString src=QDir::currentPath()+"/"+scrName;
+    QString scrName="runConverter.sh";
+    QString src=QDir::currentPath()+"/scripts/"+scrName;
     QString dst = dir+"/"+scrName;
 
     bool ok;
@@ -368,8 +368,8 @@ void MainWindow::addMech()
     QString dir = QFileDialog::getExistingDirectory(this, tr("Abrir carpeta"),
                                           WorkDir,
                                           QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-    QString scrName="test.sh";
-    QString src=QDir::currentPath()+"/"+scrName;
+    QString scrName="addMech.sh";
+    QString src=QDir::currentPath()+"/scripts/"+scrName;
     QString dst = dir+"/"+scrName;
 
     bool ok=false;
