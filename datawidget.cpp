@@ -402,8 +402,6 @@ void DataWidget::printData(const TreeModel *model, const QString fileName) const
     ItemData = model->data(nspIndex,Qt::DisplayRole);
     int nspl=model->index(nspIndex.row(), 2, nspIndex.parent()).data().toInt();
 
-
-
     while (CurrRow < nRows)
     {
         if (IdParents.last() == nspIndex)
@@ -411,13 +409,13 @@ void DataWidget::printData(const TreeModel *model, const QString fileName) const
             for (int i = 0; i < nspl; ++i){
                 out  << QString("        "+
                                 model->data(model->index(i,0,nspIndex),Qt::DisplayRole).toString())
-                                .right(8)
+                                .right(8) << " "
                      << QString("%1").arg(
                                 model->data(model->index(i,1,nspIndex),Qt::DisplayRole)
-                                .toDouble(),10,'f',5)
+                                .toDouble(),9,'f',4) << " "
                       << QString("%1").arg(
                                 model->data(model->index(i,2,nspIndex),Qt::DisplayRole)
-                                .toDouble(),10,'f',5);
+                                .toDouble(),9,'f',4);
                 out << "\n";
             }
 
@@ -426,15 +424,15 @@ void DataWidget::printData(const TreeModel *model, const QString fileName) const
                                model->data(model->index(i,0,nspIndex),Qt::DisplayRole).toString())
                                .right(8)+"  "
                     << QString( model->data(model->index(i,1,nspIndex),Qt::DisplayRole).toString()+"        ")
-                                .left(6)
+                                .left(6) << " "
                     << QString("%1").arg(
                                 model->data(model->index(i,2,nspIndex),Qt::DisplayRole)
-                                .toDouble(),10,'f',5)
+                                .toDouble(),9,'f',4) << " "
                     << QString( model->data(model->index(i,3,nspIndex),Qt::DisplayRole).toString()+"        ")
-                                .left(6)
+                                .left(6)<< " "
                     << QString("%1").arg(
                                 model->data(model->index(i,4,nspIndex),Qt::DisplayRole)
-                                .toDouble(),10,'f',5);
+                                .toDouble(),9,'f',4);
                 out << "\n";
             }
             indexList=model->match(model->index(0,0), Qt::DisplayRole,
