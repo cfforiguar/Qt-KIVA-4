@@ -68,14 +68,61 @@ void DataWidget::insertChild()
         if (keyWord.compare(WordList[i],Qt::CaseInsensitive)==0){
             kWordFound=true;
             switch (i){ //case in string WordList[i]
-            case 0:     //case in string WordList[0]
-                childData << "0.0";childDataList << childData;
+            case 0:{     //case in string WordList[0]
+                childData << " " << "0.0";childDataList << childData;
                 parentWord = keyWord;
+                insertChildAssist(model, childDataList ,parentWord,index);
                 break;
-            case 1:
+            }
+            case 1:{
+                //Copie el valor de "velinj"
+                childData << model->data(index.child(0,0),Qt::DisplayRole).toString()
+                          << model->data(index.child(0,1),Qt::DisplayRole).toString();
+                childDataList << childData; childData.clear();
+                //Copie los valores anteriores y añadalos a la lista
+                for (int j = 1;j < model->rowCount(index)-1;j++){
+                    childData << model->data(index.child(j,0),Qt::DisplayRole).toString()
+                              << model->data(index.child(j,1),Qt::DisplayRole).toString();
+                    childDataList << childData; childData.clear();
+                }
+                //Añada las nuevas variables
+                childData << "t1inj"   << "-1.0" ;childDataList << childData; childData.clear();
+                childData << "tdinj"   << "-1.0" ;childDataList << childData; childData.clear();
+                childData << "ca1inj"  << "9.0e9";childDataList << childData; childData.clear();
+                childData << "cadinj"  << "0.0"  ;childDataList << childData; childData.clear();
+                childData << "tspmass" << "0.0"  ;childDataList << childData; childData.clear();
+                childData << "tnparc"  << "0.0"  ;childDataList << childData; childData.clear();
+                //Copie el valor de "pulse"
+                childData << model->data(index.child(model->rowCount(index)-1,0),Qt::DisplayRole).toString()
+                          << model->data(index.child(model->rowCount(index)-1,1),Qt::DisplayRole).toString();
+                childDataList << childData; childData.clear();
+                //Borre los hijos para que no se repitan antes de volver a esccribir todo
+                parentWord = keyWord;
+                matchClearChilds(parentWord,model,index);
+                //Escriba todo
+                insertChildAssist(model, childDataList ,parentWord,index);
+                //Ponga el número que es correcto en "numinj"
+                model->setData(model->index(index.row(),1,index.parent())
+                               ,QVariant(1+ model->data(model->index(index.row(),1,index.parent()),Qt::DisplayRole).toInt()//1+numinj
+                                        ), Qt::EditRole);
+                break;
+            }
+            case 2:{//case in string WordList[2]
 
-                break;
-            case 2://case in string WordList[2]
+                //Lea el número de "numnoz"
+                int numnoz = model->data(model->index(index.row(),1,index.parent()),Qt::DisplayRole).toInt();
+                //Lea el valor de scf y guárdelo
+                parentWord = "scf";
+                QModelIndexList indexList=model->match(index,Qt::DisplayRole,QVariant(parentWord),1,Qt::MatchExactly);
+                QModelIndex scfIndex=indexList[0];
+                double scf =model->data(model->index(scfIndex.row(),1,scfIndex.parent()),Qt::DisplayRole).toDouble();
+                //Copie los valores anteriores y añadalos a la lista
+                for (int j = 0;j < 11*numnoz;j++){
+                    childData << model->data(scfIndex.child(j,0),Qt::DisplayRole).toString()
+                              << model->data(scfIndex.child(j,1),Qt::DisplayRole).toString();
+                    childDataList << childData; childData.clear();
+                }
+                //Añada los nuevos valores a la lista
                 childData << "drnoz" << "0.0";childDataList << childData; childData.clear();
                 childData << "dznoz" << "0.0";childDataList << childData; childData.clear();
                 childData << "dthnoz" << "0.0";childDataList << childData; childData.clear();
@@ -87,16 +134,30 @@ void DataWidget::insertChild()
                 childData << "smr" << "0.0";childDataList << childData; childData.clear();
                 childData << "amp0" << "0.0";childDataList << childData; childData.clear();
                 childData << "diameterinjector" << "0.0";childDataList << childData; childData.clear();
+                //Lea la tabla velinj y añádala la tabla numinj al final para ser reescrita
+                for (int j = 11*numnoz;j < model->rowCount(scfIndex);j++){
+                    childData << model->data(scfIndex.child(j,0),Qt::DisplayRole).toString()
+                              << model->data(scfIndex.child(j,1),Qt::DisplayRole).toString();
+                    childDataList << childData; childData.clear();
+                }
+                //Borre los hijos para que no se repitan antes de volver a esccribir todo
+                matchClearChilds(parentWord,model,index);
+                //Escriba la tabla como hijos de scf
+                insertChildAssist(model, childDataList ,parentWord,scfIndex);
+                //#Recupere el valor original de scf y añadalo (insertChildAssist() lo cambia)
+                model->setData(model->index(scfIndex.row(),1,index.parent()),QVariant(scf),Qt::EditRole);
+                //#Escriba el valor apropiado de numnoz
+                model->setData(model->index(index.row(),1,index.parent()),QVariant(numnoz+1),Qt::EditRole);
+                break;
+            }
+            case 3:{
 
-                parentWord = "scf";
-                //FIXME: hacer que modifique numnoz en vez de scf, pues es un error...
                 break;
-            case 3:
-
+            }
+            case 4:{
                 break;
-            case 4:
-                break;
-            case 5:
+            }
+            case 5:{
                 childData << "cf" << "0.0" << "ef" << "0.0" << "zetaf" << "0.0";childDataList << childData;
                 childData.clear();
                 childData << "cb" << "0.0" << "eb" << "0.0" << "zetab" << "0.0";childDataList << childData;
@@ -106,9 +167,11 @@ void DataWidget::insertChild()
                 childData << "ae" << "0.0"  0.0 * ????;
                 childData << "ae" << "0.0"  0.0 * ????;*/
                 break;
-            case 6:
+            }
+            case 6:{
 
                 break;
+            }
             }
             break;
         }
@@ -118,7 +181,6 @@ void DataWidget::insertChild()
         return;
     }
 
-    insertChildAssist(model, childDataList ,parentWord,index);
     view->selectionModel()->setCurrentIndex(model->index(0, 0, index),
                                             QItemSelectionModel::ClearAndSelect);
     updateActions();
@@ -321,7 +383,7 @@ void DataWidget::setupTabs()
     QStringList RegExpList;
     RegExpList << "lpr|ncfilm|nctap8|nclast|ncmon|ncaspec|gmv|cafilm|cafin|tlimd|twfilm|twfin|atdc|datdc"
                << "irest|nohydro|itype|itype|irez|angmom|pgssw|dti|dtmxca|dtmax|fchsp|deact|adia|pmplict|lospeed"
-               << "bore|stroke|squish|rpm|atdc|datdc|revrep|conrod|thsect|sector|gx|gy|gz|tcylwl|thead|tpistn"
+               << "bore|stroke|squish|rpm|atdc|datdc|cafin|revrep|conrod|thsect|sector|gx|gy|gz|tcylwl|thead|tpistn"
                << "lwall|swirl|swipro|epsy|epsv|epsp|epst|epsk|epse|pardon|a0|b0|artvis|ecnsrv|anu0|visrat|turbsw|sgls|airmu1|airmu2"
                << "xignit|t1ign|tdign|ca1ign|cadign|xignl1|xignr1|yignf1|yignd1|zignb1|zignt1|xignl2|xignr2|yignf2|yignd2|zignb2|zignt2"
                << "numnoz|numinj|numvel|t1inj|tdinj|ca1inj|cadinj|tspmas|tnparc|pulse|injdist|kolide|tpi|turb|breakup|evapp|numdiv|scf|drnoz|dznoz|dthnoz|tiltxy|tiltxz|cone|dcone|anoz|smr|amp0|diameterinjector|4000.0"
